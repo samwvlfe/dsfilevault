@@ -28,6 +28,12 @@ jobs:
 
       - name: Build (Next export)
         run: npm run build
+
+      - name: Verfiy build output exists
+        run: | 
+          ls -la
+          la -la out
+          test -f out/index.html
           
       - name: Deploy to Azure Static Web Apps
         id: builddeploy
@@ -39,8 +45,8 @@ jobs:
           ###### Repository/Build Configurations - These values can be configured to match your app requirements. ######
           # For more information regarding Static Web App workflow configurations, please visit: https://aka.ms/swaworkflowconfig
           app_location: "/" # App source code path
-          api_location: "" # Api source code path - optional
-          output_location: "/out" # Built app content directory - optional
+          api_location: "api" # Api source code path - optional
+          output_location: "out" # Built app content directory - optional
           skip_app_build: true
           ###### End of Repository/Build Configurations ######
 
