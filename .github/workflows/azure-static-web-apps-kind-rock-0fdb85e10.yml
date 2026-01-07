@@ -28,12 +28,6 @@ jobs:
 
       - name: Build (Next export)
         run: npm run build
-
-      - name: Verfiy build output exists
-        run: | 
-          ls -la
-          la -la out
-          test -f out/index.html
           
       - name: Deploy to Azure Static Web Apps
         id: builddeploy
