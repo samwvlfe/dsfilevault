@@ -31,6 +31,9 @@ jobs:
       
       - name: Confirm index.html exists
         run: test -f out/index.html
+
+      - name: Copy SWA config into export output
+        run: cp staticwebapp.config.json out/staticwebapp.config.json
           
       - name: Deploy to Azure Static Web Apps
         id: builddeploy
