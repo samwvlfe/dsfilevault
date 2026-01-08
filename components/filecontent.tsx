@@ -6,7 +6,7 @@ import styles from "./filecontent.module.css";
 type ApiFile = {
     id?: string;
     name: string;
-    WebUrl?: string;
+    webUrl?: string;
     size?: number;
 };
 
@@ -28,7 +28,6 @@ export function FileContent() {
                 const data = await res.json();
 
                 const list: ApiFile[] = data.files ?? [];
-                setFiles(list);
 
                 if (!cancelled) setFiles(list);
             } catch (e: any) {
@@ -47,7 +46,7 @@ export function FileContent() {
     //alternate colors for rows and populate links
     const rows = useMemo(() => {
         return files.map((f, i) => {
-            const href = f.WebUrl ?? "#";
+            const href = f.webUrl ?? "#";
             const grey = i % 2 === 1;
 
             return (

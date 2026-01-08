@@ -8,7 +8,8 @@ Stack: Next.js, Microsoft Static Web App, Microsoft Graph API, Microsoft Sharepo
 
 Auth: Microsoft Entra ID auth 
 
-compile local: npm run build, npx serve@latest out
-compile prod: https://kind-rock-0fdb85e10.1.azurestaticapps.net/
+compile local:
+    see changes: npm run dev
+    static render: npm run build, npx serve@latest out
 
-Media queries: <1000px, <XXXpx
+compile prod: https://kind-rock-0fdb85e10.1.azurestaticapps.net/
