@@ -3,8 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "./header.module.css";
-import dockstarlogo from "@/app/logo.png";
-import { terminal } from "@/app/fonts";
+import dockstarlogo from "@/app/ds-logo.png";
 
 type ClientPrincipal = {
     userId: string;
@@ -35,14 +34,16 @@ export function Header() {
     }, []);
 
     const claims = principal?.claims ?? [];
+    console.log("claims:", claims);
     const name =
         claims.find((c) => c.typ === "name")?.val ||
         claims.find((c) => c.typ === "preferred_username")?.val ||
         principal?.userDetails ||
         "";
+    
 
     return (
-        <div className={`${styles.hdr} ${terminal.className} row apart`}>
+        <div className={`${styles.hdr} row apart`}>
             <Image
                 className={styles.logo}
                 src={dockstarlogo}
@@ -51,7 +52,7 @@ export function Header() {
                 height={427}
                 priority
             />
-            <div className={styles.title}>FILE VAULT</div>
+            <div className={styles.title}>DOCKSTAR FILE VAULT</div>
             <div className={styles.user}>{name ? `Welcome, ${name}!` : "Welcome!"}</div>
         </div>
     );

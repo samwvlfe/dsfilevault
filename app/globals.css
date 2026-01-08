@@ -4,11 +4,18 @@
   --rad: 10px;
   --padd: 20px;
   --orange: #be4e30;
+  --bkgd: #f1f1f1;
 }
 
-body {
+body{
   padding: 0;
   margin: 0;
+}
+
+main{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
 }
 
 .row{

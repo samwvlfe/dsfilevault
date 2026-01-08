@@ -1,0 +1,13 @@
+.wrapper{
+    background-color: var(--bkgd);
+    flex: 1;
+}
+
+.infobar{
+    height: 15vh;
+    padding: var(--padd);
+    }
+    .txt{
+        font-size: 20px;
+        color: var(--orange);
+    }
