@@ -1,0 +1,7 @@
+.ftr{
+    background-color: #000000;
+    color: #ffffff;
+    font-size: 14px;
+    padding: var(--padd);
+    justify-content: center;
+}

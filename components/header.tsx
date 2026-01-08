@@ -40,6 +40,8 @@ export function Header() {
         claims.find((c) => c.typ === "preferred_username")?.val ||
         principal?.userDetails ||
         "";
+    const namestrip = name.split("@")[0];
+    
     
 
     return (
@@ -53,7 +55,7 @@ export function Header() {
                 priority
             />
             <div className={styles.title}>DOCKSTAR FILE VAULT</div>
-            <div className={styles.user}>{name ? `Welcome, ${name}!` : "Welcome!"}</div>
+            <div className={styles.user}>{namestrip ? `Welcome, ${namestrip}!` : "Welcome!"}</div>
         </div>
     );
 }
