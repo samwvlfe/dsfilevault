@@ -266,7 +266,7 @@ export function FileContent() {
                     return (
                         <div
                           key={item.id}
-                          className={`${styles.docBubble} row${isFolder ? styles.folderBub : styles.fileBub}`}
+                          className={`${styles.docBubble} row ${isFolder ? styles.folderBub : styles.fileBub}`}
                           onClick={() => onItemClick(item)}
                           role= "button"
                           tabIndex={0}
