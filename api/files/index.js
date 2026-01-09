@@ -6,10 +6,9 @@
 
 const graphBase = "https://graph.microsoft.com/v1.0";
 
-/** Optional fetch polyfill for older Node runtimes */
 async function getFetch() {
   if (typeof fetch === "function") return fetch;
-  const mod = await import("node-fetch"); // only if you added node-fetch
+  const mod = await import("node-fetch");
   return mod.default;
 }
 
@@ -67,7 +66,7 @@ async function graphGet(url, token) {
   return resp.json();
 }
 
-/** Handles paging via @odata.nextLink */
+/** Handle paging via @odata.nextLink */
 async function graphGetAll(url, token) {
   const out = [];
   let next = url;
@@ -90,19 +89,17 @@ async function resolveSite({ hostname, sitePath }, token) {
   return graphGet(`${graphBase}/sites/${hostname}:${path}`, token);
 }
 
-/** If you want a non-default document library, set SP_DRIVE_ID */
+/** Set siteId to get a non-default document library */
 async function resolveDriveId(siteId, token) {
   const explicit = process.env.SP_DRIVE_ID;
   if (explicit) return explicit;
 
-  // Default document library drive
   const drive = await graphGet(`${graphBase}/sites/${siteId}/drive`, token);
   return drive.id;
 }
 
 function identityToSimple(identitySet) {
   if (!identitySet) return null;
-  // identitySet may include user, application, device
   const u = identitySet.user;
   const a = identitySet.application;
 
@@ -142,7 +139,6 @@ function mapDriveItem(x) {
     createdBy: identityToSimple(x.createdBy),
     lastModifiedBy: identityToSimple(x.lastModifiedBy),
 
-    // Helpful facets
     file: x.file
       ? {
           mimeType: x.file.mimeType || null,
@@ -155,19 +151,16 @@ function mapDriveItem(x) {
         }
       : null,
 
-    // Often useful for change detection / caching
     eTag: x.eTag || null,
     cTag: x.cTag || null,
 
     parentReference: x.parentReference || null,
 
-    // Sometimes present; don’t rely on it always being there
     downloadUrl: x["@microsoft.graph.downloadUrl"] || null,
   };
 }
 
 function buildChildrenUrl({ driveId, parentId }) {
-  // Keep the $select tight so responses are fast.
   const select = [
     "id",
     "name",
@@ -182,7 +175,6 @@ function buildChildrenUrl({ driveId, parentId }) {
     "eTag",
     "cTag",
     "parentReference",
-    // NOTE: downloadUrl is not selectable; it may still appear automatically for files
   ].join(",");
 
   const base =
@@ -190,7 +182,6 @@ function buildChildrenUrl({ driveId, parentId }) {
       ? `${graphBase}/drives/${driveId}/items/${parentId}/children`
       : `${graphBase}/drives/${driveId}/root/children`;
 
-  // $top helps reduce number of pages; Graph may cap it.
   return `${base}?$select=${encodeURIComponent(select)}&$top=200`;
 }
 
