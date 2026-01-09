@@ -26,15 +26,11 @@ export function Header() {
             // handle either {clientPrincipal} or [{clientPrincipal}]
             const cp = Array.isArray(data) ? data[0]?.clientPrincipal : data?.clientPrincipal;
             setPrincipal(cp ?? null);
-
-            // TEMP: inspect what claims you actually get
-            console.log("/.auth/me", data);
         })
         .catch(() => setPrincipal(null));
     }, []);
 
     const claims = principal?.claims ?? [];
-    console.log("claims:", claims);
     const name =
         claims.find((c) => c.typ === "name")?.val ||
         claims.find((c) => c.typ === "preferred_username")?.val ||

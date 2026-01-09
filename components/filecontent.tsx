@@ -76,9 +76,10 @@ export function FileContent() {
     const [parentId, setParentId] = useState<string>("root");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-
-    const [history, setHistory] = useState<string[]>([]); // for back nav
-
+    const [currentLabel, setCurrentLabel] = useState<string>("All Folders");
+    const [nameHistory, setNameHistory] = useState<string[]>([]);
+    const [history, setHistory] = useState<string[]>([]);
+    
 
     //load files/folders from API
     async function load(parent?: string, opts?: { pushHistory: boolean }) {
@@ -106,6 +107,8 @@ export function FileContent() {
     }
 
     useEffect(() => {
+        setCurrentLabel("All Folders");
+        setNameHistory([]);
         // initial root load
         load();
     }, []);
@@ -114,6 +117,19 @@ export function FileContent() {
         () => items.filter((x) => x.type === "file").length,
         [items]
     );
+
+    const folderCount = useMemo(
+        () => items.filter((x) => x.type === "folder").length,
+        [items]
+    );
+
+    function openFolder(item: ApiFile) {
+        if (item.type !== "folder") return;
+
+        setNameHistory((h) => [...h, currentLabel]);
+        setCurrentLabel(item.name);
+        load(item.id, { pushHistory: true });
+    }
 
     // folders first, then files, alphabetical
     const sortedItems = useMemo(() => {
@@ -144,9 +160,15 @@ export function FileContent() {
             const prev = h[h.length - 1];
             const nextHistory = h.slice(0, -1);
 
+            // restore label in sync
+            setNameHistory((nh) => {
+                const prevLabel = nh[nh.length - 1] ?? "All Folders";
+                setCurrentLabel(prevLabel);
+                return nh.slice(0, -1);
+            });
+
             // load previous parent WITHOUT pushing history
             load(prev === "root" ? undefined : prev, { pushHistory: false });
-
             return nextHistory;
         });
     }
@@ -156,7 +178,7 @@ export function FileContent() {
 
             {/* TOP ROW */}
             <div className={`${styles.toprow} row apart`}>
-                <div className="row">
+                <div className="row center">
                     <button
                       onClick={goBack}
                       disabled={history.length === 0 || loading}
@@ -165,11 +187,11 @@ export function FileContent() {
                         Back
                     </button>
                     <span>
-                        {parentId === "root" ? "All Folders" : "Folder Contents"}
+                        <strong>{currentLabel}</strong>
                     </span>
                 </div>
                 <div>
-                    <span>{fileCount} Files</span>
+                    <span>{folderCount} Folders, {fileCount} Files</span>
                 </div>
             </div>
 
