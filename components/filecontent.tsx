@@ -183,8 +183,8 @@ export function FileContent() {
                                 <div className={styles.docName}>{item.name}</div>
                                 {/* doc meta */}
                                 <div className={`${styles.docMeta} row apart`}>
-                                    <div id="docDate">{created}</div>
-                                    <div id="docSize">{sizeOrCount}</div>
+                                    <div>{created}</div>
+                                    <div>{sizeOrCount}</div>
                                 </div>
                             </div>
                         </div>
