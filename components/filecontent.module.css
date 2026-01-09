@@ -4,6 +4,7 @@
     padding: var(--padd) 10vw;
     gap: var(--padd);
     border-top: 2px solid #dddddd;
+    overflow-y: auto;
     }
     .toprow{
         width: 100%;
@@ -11,7 +12,7 @@
     }
     .labels{
         flex: 1;
-        justify-content: space-around;
+        justify-content: space-between;
     }
     .toprow span{
         font-size: 14px;

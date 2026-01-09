@@ -3,7 +3,13 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import foldericon from "@/app/images/folder.png";
+import imageicon from "@/app/images/image.png";
 import pdficon from "@/app/images/pdf.png";
+import docxicon from "@/app/images/docx.png";
+import mp4icon from "@/app/images/mp4.png";
+import pptxicon from "@/app/images/pptx.png";
+import xlsxicon from "@/app/images/xlsx.png";
+import defaultfile from "@/app/images/defaultfile.png";
 import styles from "./filecontent.module.css";
 
 type ApiIdentity = {
@@ -98,7 +104,7 @@ export function FileContent() {
             const res = await fetch(url);
             if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
             const data: ApiResponse = await res.json();
-
+            console.log("API response data:", data); // Debug log
             setItems(data.items || []);
             setParentId(data.parentId || (parent ? parent : "root"));
         } catch (e: any) {
@@ -207,7 +213,18 @@ export function FileContent() {
             <div className={styles.dataCont}>
                 {sortedItems.map((item) => {
                     // determine icon - add more types as needed
-                    const icon = item.type === "folder" ? foldericon : pdficon;
+                    let icon;
+                    if(item.type === "folder"){
+                        icon = foldericon;
+                    }
+                    else if(item.type === "file"){
+                        if(isPdf(item)){icon = pdficon;}
+                        if(item.file?.mimeType?.startsWith("image/")){icon = imageicon;}
+                    }
+                    else{
+                        icon = defaultfile;
+                    }
+
                     const created = formatDate(item.createdDateTime);
                     const sizeOrCount =
                         item.type === "folder"
