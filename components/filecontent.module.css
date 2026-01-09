@@ -17,7 +17,7 @@
     .toprow span{
         font-size: 14px;
         font-weight: bold;
-        color: var(--textcolor);
+        color: var(--darktext);
         }
         .bbtnCont{
             display: flex;
@@ -95,9 +95,23 @@
         }
         .docName{
             font-size: 14px;
-            color: var(--orange);
+            font-weight: bold;
+            color: var(--black);
         }
         .docMeta{
             font-size: 12px;
-            color: #5e5e5e;
+            color: var(--lighttext);
         }
+
+    .folderTxt{
+        background-color: rgb(0, 186, 16);
+    }
+    .fileTxt{
+        background-color: rgb(0, 118, 182);
+    }
+    .folderBub{
+        background-color: rgba(0, 255, 21, 0.1);
+    }
+    .fileBub{
+        background-color: rgba(0, 166, 255, 0.1);
+    }

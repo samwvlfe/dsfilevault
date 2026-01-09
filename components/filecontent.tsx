@@ -11,6 +11,7 @@ import pptxicon from "@/app/images/fileicons/pptx.png";
 import xlsxicon from "@/app/images/fileicons/xlsx.png";
 import defaultfile from "@/app/images/fileicons/defaultfile.png";
 import styles from "./filecontent.module.css";
+import { Space_Mono } from "next/font/google";
 
 type ApiIdentity = {
     type: "user" | "application" | string;
@@ -199,7 +200,9 @@ export function FileContent() {
                         <strong>{currentLabel}</strong>
                     </span>
                     <div>
-                        <span>{folderCount} Folder{folderCount !== 1 ? "s" : ""}, {fileCount} Files</span>
+                        <span>
+                            <span className={styles.folderTxt}>{folderCount} Folder{folderCount !== 1 ? "s" : ""}</span>, <span className={styles.fileTxt}>{fileCount} File{fileCount !== 1 ? "s" : ""}</span>
+                        </span>
                     </div>
                 </div>
             </div>
@@ -211,9 +214,10 @@ export function FileContent() {
             {/* DATA LIST */}
             <div className={styles.dataCont}>
                 {sortedItems.map((item) => {
+                    const isFolder = item.type === "folder";
                     // determine icon - add more types as needed
                     let icon;
-                    if(item.type === "folder"){
+                    if(isFolder){
                         icon = foldericon;
                     }
                     else{
@@ -254,14 +258,14 @@ export function FileContent() {
 
                     const created = formatDate(item.createdDateTime);
                     const sizeOrCount =
-                        item.type === "folder"
+                        isFolder
                         ? `${item.folder?.childCount ?? 0} items`
                         : formatBytes(item.size);
 
                     return (
                         <div
                           key={item.id}
-                          className={`${styles.docBubble} row`}
+                          className={`${styles.docBubble} row${isFolder ? styles.folderBub : styles.fileBub}`}
                           onClick={() => onItemClick(item)}
                           role= "button"
                           tabIndex={0}
@@ -269,15 +273,15 @@ export function FileContent() {
                             if (e.key === "Enter" || e.key === " ") onItemClick(item);
                           }}
                           style={{ cursor: "pointer"}}
-                          title={item.type === "folder" ? "Open folder" : item.name}
+                          title={isFolder ? "Open folder" : item.name}
                         >
                             <Image
                               className={styles.docIcon}
                               //decide what icon to show
                               src={icon}
-                              alt={item.type === "folder" ? "folder icon" : "file icon"}
-                              width={item.type === "folder" ? 536 : 1201}
-                              height={item.type === "folder" ? 388 : 872}
+                              alt={isFolder ? "folder icon" : "file icon"}
+                              width={isFolder ? 536 : 1201}
+                              height={isFolder ? 388 : 872}
                               priority={false}
                             />
 
