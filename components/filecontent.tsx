@@ -2,14 +2,14 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
-import foldericon from "@/app/images/folder.png";
-import imageicon from "@/app/images/image.png";
-import pdficon from "@/app/images/pdf.png";
-import docxicon from "@/app/images/docx.png";
-import mp4icon from "@/app/images/mp4.png";
-import pptxicon from "@/app/images/pptx.png";
-import xlsxicon from "@/app/images/xlsx.png";
-import defaultfile from "@/app/images/defaultfile.png";
+import foldericon from "@/app/images/fileicons/folder.png";
+import imageicon from "@/app/images/fileicons/image.png";
+import pdficon from "@/app/images/fileicons/pdf.png";
+import docxicon from "@/app/images/fileicons/docx.png";
+import mp4icon from "@/app/images/fileicons/mp4.png";
+import pptxicon from "@/app/images/fileicons/pptx.png";
+import xlsxicon from "@/app/images/fileicons/xlsx.png";
+import defaultfile from "@/app/images/fileicons/defaultfile.png";
 import styles from "./filecontent.module.css";
 
 type ApiIdentity = {
