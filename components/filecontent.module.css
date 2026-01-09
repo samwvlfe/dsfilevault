@@ -5,11 +5,66 @@
     gap: var(--padd);
     border-top: 2px solid #dddddd;
     }
+    .toprow{
+        width: 100%;
+        gap: 20px;
+    }
+    .labels{
+        flex: 1;
+        justify-content: space-around;
+    }
     .toprow span{
         font-size: 14px;
         font-weight: bold;
         color: var(--textcolor);
-    }
+        }
+        .bbtnCont{
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .backButton{
+            border-radius: 5px;
+            color: #ffffff;
+            border: 2px solid var(--orange);
+            text-align: center;
+            cursor: pointer;
+            padding: 5px 20px;
+            min-width: 100px;
+            flex: 0 0 auto;
+            transition: opacity 250ms ease, transform 250ms ease;
+        }
+        .backButton span{
+            display: inline-block;
+            position: relative;
+            transition: 0.5s;
+        }
+        .backButton span:before {
+            content: '\00ab';
+            position: absolute;
+            opacity: 0;
+            left: -20px;
+            transition: 0.5s;
+        }
+        .backButton:hover span {
+            padding-left: 15px;
+        }
+        .backButton:hover span:before {
+            opacity: 1;
+            left: 0;
+        }
+        .backButtonShown {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: auto;
+        }
+
+        .backButtonHidden {
+            opacity: 0;
+            transform: translateX(-8px);
+            pointer-events: none;
+        }
+        
     .dataCont{
         display: grid;
         grid-template-columns: repeat(4, 1fr);

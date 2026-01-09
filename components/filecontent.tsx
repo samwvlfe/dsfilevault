@@ -79,6 +79,8 @@ export function FileContent() {
     const [currentLabel, setCurrentLabel] = useState<string>("All Folders");
     const [nameHistory, setNameHistory] = useState<string[]>([]);
     const [history, setHistory] = useState<string[]>([]);
+
+    const atRoot = history.length === 0;
     
 
     //load files/folders from API
@@ -143,7 +145,7 @@ export function FileContent() {
     function onItemClick(item: ApiFile) {
         //folder, render children
         if (item.type === "folder") {
-            load(item.id, { pushHistory: true });
+            openFolder(item);
             return;
         }
         // file, open in new tab
@@ -177,21 +179,23 @@ export function FileContent() {
         <div className={styles.wrapper}>
 
             {/* TOP ROW */}
-            <div className={`${styles.toprow} row apart`}>
-                <div className="row center">
-                    <button
-                      onClick={goBack}
-                      disabled={history.length === 0 || loading}
-                      aria-disabled={history.length === 0 || loading}
-                    >
-                        Back
-                    </button>
+            <div className={`${styles.toprow} row center`}>
+                <button
+                    className={`${styles.backButton} ${atRoot ? styles.backButtonHidden : styles.backButtonShown}`}
+                    onClick={goBack}
+                    disabled={atRoot || loading}
+                    aria-disabled={atRoot || loading}
+                    style={{ visibility: atRoot ? "hidden" : "visible" }}
+                >
+                    <span>Back</span>
+                </button>
+                <div className={`${styles.labels} row center`}>
                     <span>
                         <strong>{currentLabel}</strong>
                     </span>
-                </div>
-                <div>
-                    <span>{folderCount} Folders, {fileCount} Files</span>
+                    <div>
+                        <span>{folderCount} Folder{folderCount !== 1 ? "s" : ""}, {fileCount} Files</span>
+                    </div>
                 </div>
             </div>
 
