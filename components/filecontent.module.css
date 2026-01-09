@@ -1,41 +1,47 @@
 .wrapper{
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    padding: var(--padd) 10vw;
     gap: var(--padd);
-    width: 90%;
-    margin: auto;
+    border-top: 2px solid #dddddd;
     }
-    .nav{
-        width: 300px;
-        border-right: 1px solid black;
-        padding: 10px;
-    }
-    .title{
-        font-size: 18px;
-        color: #000000;;
-    }
-    .column{
-        display: flex;
-        flex-direction: column;
-        font-size: 16px;
-        width: 400px;
-    }
-    .column a{
-        color: var(--orange);
-    }
-    .c_hdr{
-        background-color: #000000;
-        font-size: 18px;
-        padding: 10px;
+    .toprow span{
+        font-size: 14px;
         font-weight: bold;
-        color: #ffffff;
+        color: var(--textcolor);
     }
-    .c_row{
-        color: var(--orange);
-        font-size: 16px;
-        padding: 8px 10px;
+    .dataCont{
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--padd);
+    }
+    .docBubble{
+        background-color: var(--background);
+        border: 1px solid #dddddd;
+        padding: 15px;
+        border-radius: var(--rad);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .docBubble:hover .docName{
+        text-decoration: underline;
+    }
+    .docBubble:hover{
+        cursor: pointer;
         }
-        .grey{
-            background-color: #e1e1e1;
-        } 
-
+        .docIcon{
+            height: 40px;
+            width: auto;
+        }
+        .docInfo{
+            margin: 0 0 0 10px;
+            gap: 5px;
+            width: 100%;
+        }
+        .docName{
+            font-size: 14px;
+            color: var(--orange);
+        }
+        .docMeta{
+            font-size: 12px;
+            color: #5e5e5e;
+        }

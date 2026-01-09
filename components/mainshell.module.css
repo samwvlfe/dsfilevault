@@ -5,9 +5,9 @@
 
 .infobar{
     height: 10vh;
-    padding: var(--padd);
+    padding: 0 var(--padd);
     }
     .txt{
-        font-size: 20px;
+        font-size: 15px;
         color: var(--orange);
     }

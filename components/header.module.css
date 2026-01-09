@@ -12,11 +12,11 @@
         font-size: 40px;
         font-family: inherit;
         font-weight: 700;
-        color: #ffffff;
+        color: var(--background);
         transform: translateX(-40px);
     }
     .user{
         font-size: 20px;
-        color: #ffffff;
+        color: var(--background);
         align-self: flex-end;
     }

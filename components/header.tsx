@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import styles from "./header.module.css";
-import dockstarlogo from "@/app/ds-logo.png";
+import dockstarlogo from "@/app/images/ds-logo.png";
 
 type ClientPrincipal = {
     userId: string;

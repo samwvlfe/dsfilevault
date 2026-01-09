@@ -1,6 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import Image from "next/image";
+import foldericon from "@/app/images/folder.png";
+import pdficon from "@/app/images/pdf.png";
 import styles from "./filecontent.module.css";
 
 type ApiFile = {
@@ -11,76 +14,87 @@ type ApiFile = {
 };
 
 export function FileContent() {
-    const [files, setFiles] = useState<ApiFile[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string>("");
 
-    useEffect(() => {
-        let cancelled = false;
-
-        // Fetch files from your API endpoint
-        async function load() {
-            try {
-                setLoading(true);
-                setError("");
-                const res = await fetch("/api/files", { cache: "no-store" });
-                if (!res.ok) throw new Error(`API error: ${res.status}`);
-                const data = await res.json();
-
-                const list: ApiFile[] = data.files ?? [];
-
-                if (!cancelled) setFiles(list);
-            } catch (e: any) {
-                if (!cancelled) setError(e?.message ?? "Failed to load files");
-            } finally {
-                if (!cancelled) setLoading(false);
-            }
-        }
-
-        load();
-        return () => {
-            cancelled = true;
-        };
-    }, []);
-
-    //alternate colors for rows and populate links
-    const rows = useMemo(() => {
-        return files.map((f, i) => {
-            const href = f.webUrl ?? "#";
-            const grey = i % 2 === 1;
-
-            return (
-                <div key={f.id ?? `${f.name}-${i}`} className={`${styles.c_row} ${grey ? styles.grey : ""}`}>
-
-                    <a href={href} target="_blank" rel="noreferrer">
-                        {f.name}
-                    </a>
-                    
-                </div>
-            );
-        });
-    }, [files]);
 
     return (
         <div className={styles.wrapper}>
-        {/* NAV */}
-        <div className={`${styles.nav} stack`}>
-            <div className={styles.title}>Hot Links/Search/Directory</div>
-        </div>
 
-        {/* FILE LIST(s) */}
-        <div className={`${styles.column} stack`}>
-            <div className={styles.c_hdr}>Documents</div>
+            <div className={`${styles.toprow} row apart`}>
+                <span>All Folders</span>
+                <div>2112<span> Files</span></div>
+            </div>
 
-            {loading && <div className={styles.c_row}>Loading…</div>}
-            {error && <div className={styles.c_row}>Error: {error}</div>}
+            <div className={styles.dataCont}>
 
-            {!loading && !error && files.length === 0 && (
-            <div className={styles.c_row}>No files found.</div>
-            )}
-
-            {!loading && !error && rows}
-        </div>
+                <div className={`${styles.docBubble} row`}>
+                    <Image
+                        className={styles.docIcon}
+                        src={foldericon}
+                        alt="folder icon"
+                        width={536}
+                        height={388}
+                        priority
+                    />
+                    <div className={`${styles.docInfo} stack`}>
+                        <div className={styles.docName}>Foldername</div>
+                        <div className={`${styles.docMeta} row apart`}>
+                            <div id="docDate">Date Create</div>
+                            <div id="docSize">Size</div>
+                        </div>
+                    </div>
+                </div>
+                <div className={`${styles.docBubble} row`}>
+                    <Image
+                        className={styles.docIcon}
+                        src={foldericon}
+                        alt="folder icon"
+                        width={536}
+                        height={388}
+                        priority
+                    />
+                    <div className={`${styles.docInfo} stack`}>
+                        <div className={styles.docName}>Foldername</div>
+                        <div className={`${styles.docMeta} row apart`}>
+                            <div id="docDate">Date Create</div>
+                            <div id="docSize">Size</div>
+                        </div>
+                    </div>
+                </div>
+                <div className={`${styles.docBubble} row`}>
+                    <Image
+                        className={styles.docIcon}
+                        src={pdficon}
+                        alt="folder icon"
+                        width={1201}
+                        height={872}
+                        priority
+                    />
+                    <div className={`${styles.docInfo} stack`}>
+                        <div className={styles.docName}>Filename</div>
+                        <div className={`${styles.docMeta} row apart`}>
+                            <div id="docDate">Date Create</div>
+                            <div id="docSize">Size</div>
+                        </div>
+                    </div>
+                </div>
+                <div className={`${styles.docBubble} row`}>
+                    <Image
+                        className={styles.docIcon}
+                        src={pdficon}
+                        alt="folder icon"
+                        width={1201}
+                        height={872}
+                        priority
+                    />
+                    <div className={`${styles.docInfo} stack`}>
+                        <div className={styles.docName}>Filename</div>
+                        <div className={`${styles.docMeta} row apart`}>
+                            <div id="docDate">Date Create</div>
+                            <div id="docSize">Size</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 }
