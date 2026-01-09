@@ -104,10 +104,14 @@
         }
 
     .folderTxt{
-        background-color: rgb(0, 186, 16);
+        background-color: rgb(0, 186, 16, 0.6);
+        padding: 1px 5px;
+        border-radius: 5px;
     }
     .fileTxt{
-        background-color: rgb(0, 118, 182);
+        background-color: rgb(0, 118, 182, 0.6);
+        padding: 1px 5px;
+        border-radius: 5px;
     }
     .folderBub{
         background-color: rgba(0, 255, 21, 0.1);
