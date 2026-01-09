@@ -47,12 +47,12 @@ export function Header() {
     return (
         <div className={`${styles.hdr} row apart`}>
             <Image
-                className={styles.logo}
-                src={dockstarlogo}
-                alt="dockstar logo"
-                width={1420}
-                height={427}
-                priority
+              className={styles.logo}
+              src={dockstarlogo}
+              alt="dockstar logo"
+              width={1420}
+              height={427}
+              priority
             />
             <div className={styles.title}>DOCKSTAR FILE VAULT</div>
             <div className={styles.user}>{namestrip ? `Welcome, ${namestrip}!` : "Welcome!"}</div>

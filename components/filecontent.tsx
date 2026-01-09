@@ -13,14 +13,9 @@ type ApiIdentity = {
     email?: string | null;
 };
 
-type ApiFileFacet = {
-    mimeType?: string | null;
-    hashes?: Record<string, string> | null;
-};
+type ApiFileFacet = { mimeType?: string | null; };
 
-type ApiFolderFacet = {
-     childCount?: number | null;
-};
+type ApiFolderFacet = { childCount?: number | null; };
 
 type ApiFile = {
     id: string;
@@ -38,12 +33,6 @@ type ApiFile = {
 
     file?: ApiFileFacet | null;
     folder?: ApiFolderFacet | null;
-
-    eTag?: string | null;
-    cTag?: string | null;
-
-    parentReference?: any;
-    downloadUrl?: string | null;
 };
 
 type ApiResponse = {
@@ -88,13 +77,21 @@ export function FileContent() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
+    const [history, setHistory] = useState<string[]>([]); // for back nav
+
+
     //load files/folders from API
-    async function load(parent?: string) {
+    async function load(parent?: string, opts?: { pushHistory: boolean }) {
         setLoading(true);
         setError(null);
         try {
+            // push selected parent BEFORE navigating into a folder
+            if (opts?.pushHistory && parentId) {
+                setHistory((h) => [...h, parentId]);
+            }
+
             //if parent is provided, load that folder; else load root
-            const url = parent ? `/api/files?parentId=${encodeURIComponent(parent)}` : "/api/files";
+            const url = parent && parent !== "root" ? `/api/files?parentId=${encodeURIComponent(parent)}` : "/api/files";
             const res = await fetch(url);
             if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
             const data: ApiResponse = await res.json();
@@ -126,10 +123,32 @@ export function FileContent() {
         });
     }, [items]);
 
-    // open folder on click (load children)
-    function openFolder(item: ApiFile) {
-        if (item.type !== "folder") return;
-        load(item.id);
+    // open foolder/load file on click
+    function onItemClick(item: ApiFile) {
+        //folder, render children
+        if (item.type === "folder") {
+            load(item.id, { pushHistory: true });
+            return;
+        }
+        // file, open in new tab
+        if (item.webUrl) {
+            window.open(item.webUrl, "_blank", "noopener,noreferrer");
+        }
+    }
+
+    // navigate back to previous folder
+    function goBack() {
+        setHistory((h) => {
+            if (h.length === 0) return h;
+
+            const prev = h[h.length - 1];
+            const nextHistory = h.slice(0, -1);
+
+            // load previous parent WITHOUT pushing history
+            load(prev === "root" ? undefined : prev, { pushHistory: false });
+
+            return nextHistory;
+        });
     }
 
     return (
@@ -137,9 +156,18 @@ export function FileContent() {
 
             {/* TOP ROW */}
             <div className={`${styles.toprow} row apart`}>
-                <span>
-                    {parentId === "root" ? "All Folders" : "Folder Contents"}
-                </span>
+                <div className="row">
+                    <button
+                      onClick={goBack}
+                      disabled={history.length === 0 || loading}
+                      aria-disabled={history.length === 0 || loading}
+                    >
+                        Back
+                    </button>
+                    <span>
+                        {parentId === "root" ? "All Folders" : "Folder Contents"}
+                    </span>
+                </div>
                 <div>
                     <span>{fileCount} Files</span>
                 </div>
@@ -162,20 +190,25 @@ export function FileContent() {
 
                     return (
                         <div
-                        key={item.id}
-                        className={`${styles.docBubble} row`}
-                        onClick={() => openFolder(item)}
-                        role={item.type === "folder" ? "button" : undefined}
-                        style={item.type === "folder" ? { cursor: "pointer" } : undefined}
-                        title={item.type === "folder" ? "Open folder" : item.name}
+                          key={item.id}
+                          className={`${styles.docBubble} row`}
+                          onClick={() => onItemClick(item)}
+                          role= "button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") onItemClick(item);
+                          }}
+                          style={{ cursor: "pointer"}}
+                          title={item.type === "folder" ? "Open folder" : item.name}
                         >
                             <Image
-                                className={styles.docIcon}
-                                src={item.type === "folder" ? foldericon : (isPdf(item) ? pdficon : pdficon)}
-                                alt={item.type === "folder" ? "folder icon" : "file icon"}
-                                width={item.type === "folder" ? 536 : 1201}
-                                height={item.type === "folder" ? 388 : 872}
-                                priority={false}
+                              className={styles.docIcon}
+                              //decide what icon to show
+                              src={item.type === "folder" ? foldericon : (isPdf(item) ? pdficon : pdficon)}
+                              alt={item.type === "folder" ? "folder icon" : "file icon"}
+                              width={item.type === "folder" ? 536 : 1201}
+                              height={item.type === "folder" ? 388 : 872}
+                              priority={false}
                             />
 
                             <div className={`${styles.docInfo} stack`}>

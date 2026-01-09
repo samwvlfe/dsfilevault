@@ -150,13 +150,6 @@ function mapDriveItem(x) {
           childCount: x.folder.childCount ?? null,
         }
       : null,
-
-    eTag: x.eTag || null,
-    cTag: x.cTag || null,
-
-    parentReference: x.parentReference || null,
-
-    downloadUrl: x["@microsoft.graph.downloadUrl"] || null,
   };
 }
 
@@ -172,9 +165,6 @@ function buildChildrenUrl({ driveId, parentId }) {
     "lastModifiedBy",
     "file",
     "folder",
-    "eTag",
-    "cTag",
-    "parentReference",
   ].join(",");
 
   const base =
