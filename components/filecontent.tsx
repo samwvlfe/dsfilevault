@@ -104,7 +104,6 @@ export function FileContent() {
             const res = await fetch(url);
             if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
             const data: ApiResponse = await res.json();
-            console.log("API response data:", data); // Debug log
             setItems(data.items || []);
             setParentId(data.parentId || (parent ? parent : "root"));
         } catch (e: any) {
@@ -217,12 +216,40 @@ export function FileContent() {
                     if(item.type === "folder"){
                         icon = foldericon;
                     }
-                    else if(item.type === "file"){
-                        if(isPdf(item)){icon = pdficon;}
-                        if(item.file?.mimeType?.startsWith("image/")){icon = imageicon;}
-                    }
                     else{
-                        icon = defaultfile;
+                        const fileType = item.name.split('.').pop()?.toLowerCase();
+                        switch(fileType){
+                            case "pdf":
+                                icon = pdficon;
+                                break;
+                            case "docx":
+                            case "dotx":
+                            case "doc":
+                                icon = docxicon;
+                                break;
+                            case "mp4":
+                            case "mov":
+                                icon = mp4icon;
+                                break;
+                            case "ppt":
+                            case "pptx":
+                                icon = pptxicon;
+                                break;
+                            case "xls":
+                            case "xlsx":
+                                icon = xlsxicon;
+                                break;
+                            case "jpg":
+                            case "jpeg":
+                            case "png":
+                            case "gif":
+                            case "bmp":
+                            case "svg":
+                                icon = imageicon;
+                                break;
+                            default:
+                                icon = defaultfile;
+                        }
                     }
 
                     const created = formatDate(item.createdDateTime);
@@ -247,7 +274,7 @@ export function FileContent() {
                             <Image
                               className={styles.docIcon}
                               //decide what icon to show
-                              src={item.type === "folder" ? foldericon : (isPdf(item) ? pdficon : pdficon)}
+                              src={icon}
                               alt={item.type === "folder" ? "folder icon" : "file icon"}
                               width={item.type === "folder" ? 536 : 1201}
                               height={item.type === "folder" ? 388 : 872}
