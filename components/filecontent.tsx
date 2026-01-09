@@ -241,6 +241,7 @@ export function FileContent() {
                                 break;
                             case "xls":
                             case "xlsx":
+                            case "csv":
                                 icon = xlsxicon;
                                 break;
                             case "jpg":
