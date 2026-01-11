@@ -83,7 +83,7 @@ export function FileContent() {
     const [parentId, setParentId] = useState<string>("root");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [currentLabel, setCurrentLabel] = useState<string>("All Folders");
+    const [currentLabel, setCurrentLabel] = useState<string>("HOME");
     const [nameHistory, setNameHistory] = useState<string[]>([]);
     const [history, setHistory] = useState<string[]>([]);
 
@@ -196,7 +196,7 @@ export function FileContent() {
                     <span>Back</span>
                 </button>
                 <div className={`${styles.labels} row center`}>
-                    <span>
+                    <span style={{ fontSize: 20 }}>
                         <strong>{currentLabel}</strong>
                     </span>
                     <div>

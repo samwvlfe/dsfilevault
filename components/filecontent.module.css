@@ -27,7 +27,8 @@
         .backButton{
             border-radius: 5px;
             color: #ffffff;
-            border: 2px solid var(--orange);
+            border: 1px solid var(--orange);
+            background: radial-gradient(#ffffff, rgba(190, 78, 48, 0.3) 76%);
             text-align: center;
             cursor: pointer;
             padding: 5px 20px;
@@ -68,7 +69,7 @@
         
     .dataCont{
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(5, 1fr);
         gap: var(--padd);
     }
     .docBubble{
@@ -104,12 +105,12 @@
         }
 
     .folderTxt{
-        background-color: rgb(0, 186, 16, 0.6);
+        background-color: rgba(0, 255, 21, 0.1);
         padding: 1px 5px;
         border-radius: 5px;
     }
     .fileTxt{
-        background-color: rgb(0, 118, 182, 0.6);
+        background-color: rgba(0, 166, 255, 0.1);
         padding: 1px 5px;
         border-radius: 5px;
     }
