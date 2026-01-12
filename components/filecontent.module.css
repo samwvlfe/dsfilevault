@@ -68,9 +68,7 @@
         }
         
     .dataCont{
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: var(--padd);
+        background-color: #be4e30;
     }
     .docBubble{
         background-color: var(--background);
@@ -119,4 +117,14 @@
     }
     .fileBub{
         background-color: rgba(0, 166, 255, 0.1);
+    }
+
+    .folderCont{
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: var(--padd);
+    }
+    .fileCont{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
     }

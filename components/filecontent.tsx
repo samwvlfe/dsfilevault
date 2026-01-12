@@ -11,7 +11,6 @@ import pptxicon from "@/app/images/fileicons/pptx.png";
 import xlsxicon from "@/app/images/fileicons/xlsx.png";
 import defaultfile from "@/app/images/fileicons/defaultfile.png";
 import styles from "./filecontent.module.css";
-import { Space_Mono } from "next/font/google";
 
 type ApiIdentity = {
     type: "user" | "application" | string;
@@ -69,12 +68,6 @@ function formatDate(iso?: string | null) {
     return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
 }
 
-function isPdf(item: ApiFile) {
-    const namePdf = item.name?.toLowerCase().endsWith(".pdf");
-    const mimePdf = item.file?.mimeType === "application/pdf";
-
-    return namePdf || mimePdf;
-}
 
 
 export function FileContent() {
@@ -121,15 +114,19 @@ export function FileContent() {
         load();
     }, []);
 
-    const fileCount = useMemo(
-        () => items.filter((x) => x.type === "file").length,
-        [items]
-    );
+    const folders = useMemo(() => {
+        return items
+            .filter((x) => x.type === "folder")
+            .slice()
+            .sort((a, b) => a.name.localeCompare(b.name));
+    }, [items]);
 
-    const folderCount = useMemo(
-        () => items.filter((x) => x.type === "folder").length,
-        [items]
-    );
+    const files = useMemo(() => {
+        return items
+            .filter((x) => x.type === "file")
+            .slice()
+            .sort((a, b) => a.name.localeCompare(b.name));
+    }, [items]);
 
     function openFolder(item: ApiFile) {
         if (item.type !== "folder") return;
@@ -201,7 +198,7 @@ export function FileContent() {
                     </span>
                     <div>
                         <span>
-                            <span className={styles.folderTxt}>{folderCount} Folder{folderCount !== 1 ? "s" : ""}</span>, <span className={styles.fileTxt}>{fileCount} File{fileCount !== 1 ? "s" : ""}</span>
+                            <span className={styles.folderTxt}>{folders.length} Folder{folders.length !== 1 ? "s" : ""}</span>, <span className={styles.fileTxt}>{files.length} File{files.length !== 1 ? "s" : ""}</span>
                         </span>
                     </div>
                 </div>
@@ -213,16 +210,57 @@ export function FileContent() {
 
             {/* DATA LIST */}
             <div className={styles.dataCont}>
-                {sortedItems.map((item) => {
-                    const isFolder = item.type === "folder";
-                    // determine icon - add more types as needed
-                    let icon;
-                    if(isFolder){
-                        icon = foldericon;
-                    }
-                    else{
-                        const fileType = item.name.split('.').pop()?.toLowerCase();
-                        switch(fileType){
+                {/* FOLDERS CONTAINER */}
+                <div className={styles.folderCont}>
+                    {folders.length > 0 ? (
+                        folders.map((item) => {
+                            const created = formatDate(item.createdDateTime);
+                            const sizeOrCount = `${item.folder?.childCount ?? 0} items`;
+
+                            return (
+                                <div
+                                    key={item.id}
+                                    className={`${styles.docBubble} row ${styles.folderBub}`}
+                                    onClick={() => onItemClick(item)}
+                                    role="button"
+                                    tabIndex={0}
+                                    onKeyDown={(e) => {
+                                    if (e.key === "Enter" || e.key === " ") onItemClick(item);
+                                    }}
+                                    style={{ cursor: "pointer" }}
+                                    title="Open folder"
+                                >
+                                    <Image
+                                        className={styles.docIcon}
+                                        src={foldericon}
+                                        alt="folder icon"
+                                        width={536}
+                                        height={388}
+                                    />
+
+                                    <div className={`${styles.docInfo} stack`}>
+                                        <div className={styles.docName}>{item.name}</div>
+                                        <div className={`${styles.docMeta} row apart`}>
+                                            <div>{created}</div>
+                                            <div>{sizeOrCount}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })
+                    ) : (
+                    !loading && !error && <div className={styles.emptySection}>No folders.</div>
+                    )}
+                </div>
+
+                {/* FILES CONTAINER */}
+                <div className={styles.fileCont}>
+                    {files.length > 0 ? (
+                        files.map((item) => {
+                            const fileType = item.name.split(".").pop()?.toLowerCase();
+                            let icon = defaultfile;
+
+                            switch (fileType) {
                             case "pdf":
                                 icon = pdficon;
                                 break;
@@ -252,57 +290,53 @@ export function FileContent() {
                             case "svg":
                                 icon = imageicon;
                                 break;
-                            default:
-                                icon = defaultfile;
-                        }
-                    }
+                            }
 
-                    const created = formatDate(item.createdDateTime);
-                    const sizeOrCount =
-                        isFolder
-                        ? `${item.folder?.childCount ?? 0} items`
-                        : formatBytes(item.size);
+                            const created = formatDate(item.createdDateTime);
+                            const sizeOrCount = formatBytes(item.size);
 
-                    return (
-                        <div
-                          key={item.id}
-                          className={`${styles.docBubble} row ${isFolder ? styles.folderBub : styles.fileBub}`}
-                          onClick={() => onItemClick(item)}
-                          role= "button"
-                          tabIndex={0}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === " ") onItemClick(item);
-                          }}
-                          style={{ cursor: "pointer"}}
-                          title={isFolder ? "Open folder" : item.name}
-                        >
-                            <Image
-                              className={styles.docIcon}
-                              //decide what icon to show
-                              src={icon}
-                              alt={isFolder ? "folder icon" : "file icon"}
-                              width={isFolder ? 536 : 1201}
-                              height={isFolder ? 388 : 872}
-                              priority={false}
-                            />
+                            return (
+                            <div
+                                key={item.id}
+                                className={`${styles.docBubble} row ${styles.fileBub}`}
+                                onClick={() => onItemClick(item)}
+                                role="button"
+                                tabIndex={0}
+                                onKeyDown={(e) => {
+                                if (e.key === "Enter" || e.key === " ") onItemClick(item);
+                                }}
+                                style={{ cursor: "pointer" }}
+                                title={item.name}
+                            >
+                                <Image
+                                    className={styles.docIcon}
+                                    src={icon}
+                                    alt="file icon"
+                                    width={1201}
+                                    height={872}
+                                />
 
-                            <div className={`${styles.docInfo} stack`}>
-                                {/* doc name */}
-                                <div className={styles.docName}>{item.name}</div>
-                                {/* doc meta */}
-                                <div className={`${styles.docMeta} row apart`}>
-                                    <div>{created}</div>
-                                    <div>{sizeOrCount}</div>
+                                <div className={`${styles.docInfo} stack`}>
+                                    <div className={styles.docName}>{item.name}</div>
+                                    <div className={`${styles.docMeta} row apart`}>
+                                        <div>{created}</div>
+                                        <div>{sizeOrCount}</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    );
-                })}
+                            );
+                        })
+                    ) : (
+                    !loading && !error && <div className={styles.emptySection}>No files.</div>
+                    )}
+                </div>
 
-                {!loading && !error && sortedItems.length === 0 && (
+                {/* IF COMPLETELY EMPTY */}
+                {!loading && !error && folders.length === 0 && files.length === 0 && (
                     <div>No items found.</div>
                 )}
             </div>
+
         </div>
     );
 }
