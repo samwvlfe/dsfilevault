@@ -209,7 +209,7 @@ export function FileContent() {
             {error && <div style={{ color: "red" }}>{error}</div>}
 
             {/* DATA LIST */}
-            <div className={styles.dataCont}>
+            <div className={`${styles.dataCont} stack`}>
                 {/* FOLDERS CONTAINER */}
                 <div className={styles.folderCont}>
                     {folders.length > 0 ? (

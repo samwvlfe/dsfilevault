@@ -5,6 +5,7 @@
     gap: var(--padd);
     border-top: 2px solid #dddddd;
     overflow-y: auto;
+    height: 424px;
     }
     .toprow{
         width: 100%;
@@ -68,7 +69,7 @@
         }
         
     .dataCont{
-        background-color: #be4e30;
+        gap: var(--padd);
     }
     .docBubble{
         background-color: var(--background);
@@ -96,6 +97,7 @@
             font-size: 14px;
             font-weight: bold;
             color: var(--black);
+            text-overflow: ellipsis;
         }
         .docMeta{
             font-size: 12px;
@@ -114,17 +116,20 @@
     }
     .folderBub{
         background-color: rgba(0, 255, 21, 0.1);
+        padding: 15px;
     }
     .fileBub{
         background-color: rgba(0, 166, 255, 0.1);
+        padding: 10px;
     }
 
     .folderCont{
         display: grid;
         grid-template-columns: repeat(4, 1fr);
-        gap: var(--padd);
+        gap: 10px;
     }
     .fileCont{
         display: grid;
         grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
     }
