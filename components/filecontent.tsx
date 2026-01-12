@@ -327,7 +327,7 @@ export function FileContent() {
                             );
                         })
                     ) : (
-                    !loading && !error && <div className={styles.emptySection}>No files.</div>
+                    !loading && !error && <div className={styles.emptySection}></div>
                     )}
                 </div>
 
