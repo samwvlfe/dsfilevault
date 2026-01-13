@@ -12,20 +12,20 @@
         position: sticky;
         top: 0;
         background-color: var(--background);
-    }
-    .labels{
-        flex: 1;
-    }
-    .searchbar{
-        width: 200px;
         }
+        .labels{
+            flex: 1;
+        }
+        .searchbar{
+            width: 200px;
+            }
         .searchbar input{
             width: 100%;
         }
-    .toprow span{
-        font-size: 14px;
-        font-weight: bold;
-        color: var(--darktext);
+        .toprow span{
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--darktext);
         }
         .bbtnCont{
             display: flex;
@@ -88,12 +88,12 @@
             font-size: 16px;
             color: var(--darktext);
         }
-        .inact .crumbBtn:hover{
-            color: var(--orangeHvr);
-            cursor: pointer;
-        }
         .crumbActive{
             color: var(--orange);
+        }
+        .crumbActive:hover{
+            color: var(--orangeHvr);
+            cursor: pointer;
         }
         .bcsep{
             font-size: 16px;
@@ -103,7 +103,6 @@
         
     .dataCont{
         gap: var(--padd);
-        padding: 0 5vw;
     }
     .docBubble{
         border: 1px solid #dddddd;
@@ -111,7 +110,7 @@
         border-radius: var(--rad);
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
-    .docBubble:hover .docName{
+    .docBubble:hover .docName, .docBubble:hover .foldName {
         text-decoration: underline;
     }
     .docBubble:hover{

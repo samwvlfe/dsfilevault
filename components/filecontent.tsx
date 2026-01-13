@@ -233,7 +233,6 @@ export function FileContent() {
                 <div className={styles.folderGrid}>
                     {folders.length > 0 ? (
                         folders.map((item) => {
-                            const created = formatDate(item.createdDateTime);
                             const sizeOrCount = `${item.folder?.childCount ?? 0} items`;
 
                             return (
