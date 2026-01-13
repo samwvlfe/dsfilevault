@@ -98,12 +98,26 @@
             margin: 0 0 0 10px;
             gap: 5px;
             width: 100%;
+            flex-wrap: nowrap;
+            text-overflow: ellipsis;
         }
         .docName{
             font-size: 14px;
             font-weight: bold;
             color: var(--black);
+        }
+        .foldName{
+            width: 70%;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--black);
+            height: 50px;
             text-overflow: ellipsis;
+        }
+        .foldMeta{
+            flex: 1;
+            font-size: 11px;
+            color: var(--lighttext);
         }
         .docMeta{
             font-size: 12px;
@@ -120,9 +134,10 @@
         padding: 1px 5px;
         border-radius: 5px;
     }
+
     .folderBub{
         background-color: rgba(0, 255, 21, 0.1);
-        padding: 15px;
+        padding: 5px;
     }
     .fileBub{
         background-color: rgba(0, 166, 255, 0.1);

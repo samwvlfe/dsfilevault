@@ -239,12 +239,9 @@ export function FileContent() {
                                         height={388}
                                     />
 
-                                    <div className={`${styles.docInfo} stack`}>
-                                        <div className={styles.docName}>{item.name}</div>
-                                        <div className={`${styles.docMeta} row apart`}>
-                                            <div>{created}</div>
-                                            <div>{sizeOrCount}</div>
-                                        </div>
+                                    <div className={`${styles.docInfo} row`}>
+                                        <div className={styles.foldName}>{item.name}</div>
+                                        <div className="foldMeta">{sizeOrCount}</div>
                                     </div>
                                 </div>
                             );
