@@ -19,9 +19,13 @@ type ApiIdentity = {
     email?: string | null;
 };
 
-type ApiFileFacet = { mimeType?: string | null; };
+type ApiFileFacet = {
+    mimeType?: string | null;
+};
 
-type ApiFolderFacet = { childCount?: number | null; };
+type ApiFolderFacet = {
+    childCount?: number | null;
+};
 
 type ApiFile = {
     id: string;
@@ -47,6 +51,11 @@ type ApiResponse = {
     items: ApiFile[];
 };
 
+type Crumb = {
+    id: string;
+    label: string
+};
+
 // ####### helper funcs for formatting data #######
 
 function formatBytes(bytes?: number | null) {
@@ -69,37 +78,31 @@ function formatDate(iso?: string | null) {
 }
 
 
-
 export function FileContent() {
     //state variables
     const [items, setItems] = useState<ApiFile[]>([]);
-    const [parentId, setParentId] = useState<string>("root");
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [currentLabel, setCurrentLabel] = useState<string>("HOME");
-    const [nameHistory, setNameHistory] = useState<string[]>([]);
-    const [history, setHistory] = useState<string[]>([]);
+    const [crumbs, setCrumbs] = useState<Crumb[]>([ { id: "root", label: "Home" } ]);
 
-    const atRoot = history.length === 0;
+    const atRoot = crumbs.length <= 1;
     
 
     //load files/folders from API
-    async function load(parent?: string, opts?: { pushHistory: boolean }) {
+    async function load(parent?: string) {
         setLoading(true);
         setError(null);
         try {
-            // push selected parent BEFORE navigating into a folder
-            if (opts?.pushHistory && parentId) {
-                setHistory((h) => [...h, parentId]);
-            }
+            const url =
+            parent && parent !== "root"
+                ? `/api/files?parentId=${encodeURIComponent(parent)}`
+                : "/api/files";
 
-            //if parent is provided, load that folder; else load root
-            const url = parent && parent !== "root" ? `/api/files?parentId=${encodeURIComponent(parent)}` : "/api/files";
             const res = await fetch(url);
             if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
             const data: ApiResponse = await res.json();
+
             setItems(data.items || []);
-            setParentId(data.parentId || (parent ? parent : "root"));
         } catch (e: any) {
             setError(e?.message ?? String(e));
         } finally {
@@ -108,12 +111,11 @@ export function FileContent() {
     }
 
     useEffect(() => {
-        setCurrentLabel("Home");
-        setNameHistory([]);
-        // initial root load
+        setCrumbs([{ id: "root", label: "Home" }]);
         load();
     }, []);
 
+    // get all folders 
     const folders = useMemo(() => {
         return items
             .filter((x) => x.type === "folder")
@@ -121,6 +123,7 @@ export function FileContent() {
             .sort((a, b) => a.name.localeCompare(b.name));
     }, [items]);
 
+    // get all files
     const files = useMemo(() => {
         return items
             .filter((x) => x.type === "file")
@@ -128,21 +131,26 @@ export function FileContent() {
             .sort((a, b) => a.name.localeCompare(b.name));
     }, [items]);
 
+    // update breadcrumbs, call load() func
     function openFolder(item: ApiFile) {
         if (item.type !== "folder") return;
 
-        setNameHistory((h) => [...h, currentLabel]);
-        setCurrentLabel(item.name);
-        load(item.id, { pushHistory: true });
+        setCrumbs((c) => [...c, { id: item.id, label: item.name}]);
+        load(item.id);
     }
 
-    // folders first, then files, alphabetical
-    const sortedItems = useMemo(() => {
-        return [...items].sort((a, b) => {
-        if (a.type !== b.type) return a.type === "folder" ? -1 : 1;
-        return a.name.localeCompare(b.name);
+    // load the selected folder from breakdcrumb
+    function jumpToCrumb(index: number) {
+        setCrumbs((c) => {
+            const next = c.slice(0, index + 1);
+            const target = next[next.length - 1];
+
+            // load target folder
+            load(target.id === "root" ? undefined : target.id);
+
+            return next;
         });
-    }, [items]);
+    }
 
     // open foolder/load file on click
     function onItemClick(item: ApiFile) {
@@ -159,24 +167,10 @@ export function FileContent() {
 
     // navigate back to previous folder
     function goBack() {
-        setHistory((h) => {
-            if (h.length === 0) return h;
-
-            const prev = h[h.length - 1];
-            const nextHistory = h.slice(0, -1);
-
-            // restore label in sync
-            setNameHistory((nh) => {
-                const prevLabel = nh[nh.length - 1] ?? "Home";
-                setCurrentLabel(prevLabel);
-                return nh.slice(0, -1);
-            });
-
-            // load previous parent WITHOUT pushing history
-            load(prev === "root" ? undefined : prev, { pushHistory: false });
-            return nextHistory;
-        });
+        if (crumbs.length <= 1) return;
+        jumpToCrumb(crumbs.length - 2);
     }
+
 
     return (
         <div className={styles.wrapper}>
@@ -193,9 +187,30 @@ export function FileContent() {
                     <span>Back</span>
                 </button>
                 <div className={`${styles.labels} row center apart`}>
-                    <span style={{ fontSize: 20 }}>
+                    <nav aria-label="Breadcrumb">
+                        <ol className={`${styles.crumblist} row center`}>
+                            {crumbs.map((crumb, idx) => {
+                                const isLast = idx == crumbs.length - 1;
+
+                                return (
+                                    <li key={crumb.id} className={styles.crumb}>
+                                        <button
+                                            type="button"
+                                            className={`${styles.crumbBtn} ${isLast ? styles.crumbActive : ""}`}
+                                            onClick={() => jumpToCrumb(idx)}
+                                            disabled={isLast || loading}
+                                            aria-current={isLast ? "page" : undefined}
+                                        >
+                                            {crumb.label}
+                                        </button>
+                                    </li>
+                                );
+                            })}
+                        </ol>
+                    </nav>
+                    {/* <span style={{ fontSize: 20 }}>
                         <strong>{currentLabel}</strong>
-                    </span>
+                    </span> */}
                     <div>
                         <span>
                             <span className={styles.folderTxt}>{folders.length} Folder{folders.length !== 1 ? "s" : ""}</span>, <span className={styles.fileTxt}>{files.length} File{files.length !== 1 ? "s" : ""}</span>

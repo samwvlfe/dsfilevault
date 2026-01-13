@@ -1,8 +1,8 @@
 .wrapper{
     display: flex;
     flex-direction: column;
-    padding: 0 5vw var(--padd);
-    gap: var(--padd);
+    padding: 0 2vw var(--padd);
+    gap: 10px;
     position: relative;
     }
     .toprow{
@@ -68,15 +68,31 @@
             transform: translateX(0);
             pointer-events: auto;
         }
-
         .backButtonHidden {
             display: none;
             transform: translateX(-8px);
             pointer-events: none;
         }
+
+        /* .crumblist{
+
+        }
+        .crumb{
+
+        }
+        .crumb:hover{
+
+        }
+        .crumbBtn{
+
+        }
+        .crumbActive{
+
+        } */
         
     .dataCont{
         gap: var(--padd);
+        padding: 0 5vw;
     }
     .docBubble{
         border: 1px solid #dddddd;
@@ -108,7 +124,7 @@
         }
         .foldName{
             width: 70%;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: bold;
             color: var(--black);
             align-content: center;
