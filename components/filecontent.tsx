@@ -241,7 +241,7 @@ export function FileContent() {
 
                                     <div className={`${styles.docInfo} row`}>
                                         <div className={styles.foldName}>{item.name}</div>
-                                        <div className="foldMeta">{sizeOrCount}</div>
+                                        <div className={styles.foldMeta}>{sizeOrCount}</div>
                                     </div>
                                 </div>
                             );
@@ -317,8 +317,9 @@ export function FileContent() {
 
                                 <div className={`${styles.docInfo} stack`}>
                                     <div className={styles.docName}>{item.name}</div>
-                                    <div className={`${styles.docMeta} row apart`}>
+                                    <div className={`${styles.docMeta} row`}>
                                         <div>{created}</div>
+                                        <span> - </span>
                                         <div>{sizeOrCount}</div>
                                     </div>
                                 </div>
