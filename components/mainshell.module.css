@@ -1,6 +1,7 @@
 .wrapper{
-    background-color: var(--bkgd);
+    background-color: var(--background);
     flex: 1;
+    overflow-x: auto;
 }
 
 .infobar{

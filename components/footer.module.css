@@ -1,6 +1,6 @@
 .ftr{
     background-color: #000000;
-    color: var(--background);
+    color: var(--whitetext);
     font-size: 14px;
     padding: var(--padd);
     justify-content: center;

@@ -1,9 +1,9 @@
 :root {
-  --background: #ffffff;
+  --whitetext: #ffffff;
   --rad: 10px;
   --padd: 20px;
   --orange: #be4e30;
-  --bkgd: #f1f1f1;
+  --background: #f1f1f1;
   --darktext: #1c1c1c;
   --lighttext: #5e5e5e;
   --black: #000000;
@@ -18,7 +18,7 @@ main{
   display: flex;
   flex-direction: column;
   height: 100vh;
-}
+} 
 
 .row{
   display: flex;

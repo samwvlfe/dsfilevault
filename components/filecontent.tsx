@@ -192,11 +192,10 @@ export function FileContent() {
                 >
                     <span>Back</span>
                 </button>
-                <div className={`${styles.labels} row center`}>
+                <div className={`${styles.labels} row center apart`}>
                     <span style={{ fontSize: 20 }}>
                         <strong>{currentLabel}</strong>
                     </span>
-                    <div className="searchbar"><input type="search" name="filesearch" id="filesearch" value={'search for files'}/></div>
                     <div>
                         <span>
                             <span className={styles.folderTxt}>{folders.length} Folder{folders.length !== 1 ? "s" : ""}</span>, <span className={styles.fileTxt}>{files.length} File{files.length !== 1 ? "s" : ""}</span>
@@ -251,7 +250,7 @@ export function FileContent() {
                             );
                         })
                     ) : (
-                    !loading && !error && <div className={styles.emptySection}>No folders.</div>
+                    !loading && !error && <div className={styles.emptySection}></div>
                     )}
                 </div>
                 

@@ -1,19 +1,20 @@
 .wrapper{
     display: flex;
     flex-direction: column;
-    padding: var(--padd) 10vw;
+    padding: 0 5vw var(--padd);
     gap: var(--padd);
-    border-top: 2px solid #dddddd;
-    overflow-y: auto;
-    height: 424px;
+    position: relative;
     }
     .toprow{
         width: 100%;
-        gap: 20px;
+        gap: var(--padd);
+        padding: var(--padd) 0 10px;
+        position: sticky;
+        top: 0;
+        background-color: var(--background);
     }
     .labels{
         flex: 1;
-        justify-content: space-between;
     }
     .searchbar{
         width: 200px;
@@ -78,7 +79,6 @@
         gap: var(--padd);
     }
     .docBubble{
-        background-color: var(--background);
         border: 1px solid #dddddd;
         padding: 15px;
         border-radius: var(--rad);
