@@ -3,6 +3,7 @@
   --rad: 10px;
   --padd: 20px;
   --orange: #be4e30;
+  --orangeHvr: #933b23;
   --background: #f1f1f1;
   --darktext: #1c1c1c;
   --lighttext: #5e5e5e;
@@ -32,4 +33,11 @@ main{
 }
 .center{
   align-items: center;
+}
+
+.hideele{
+  display: none;
+}
+.showele{
+  display: block;
 }

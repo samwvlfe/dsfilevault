@@ -193,17 +193,20 @@ export function FileContent() {
                                 const isLast = idx == crumbs.length - 1;
 
                                 return (
-                                    <li key={crumb.id} className={styles.crumb}>
-                                        <button
-                                            type="button"
-                                            className={`${styles.crumbBtn} ${isLast ? styles.crumbActive : ""}`}
-                                            onClick={() => jumpToCrumb(idx)}
-                                            disabled={isLast || loading}
-                                            aria-current={isLast ? "page" : undefined}
-                                        >
-                                            {crumb.label}
-                                        </button>
-                                    </li>
+                                    <div>
+                                        <li key={crumb.id} className={styles.crumb}>
+                                            <button
+                                                type="button"
+                                                className={`${styles.crumbBtn} ${isLast ? styles.crumbActive : ""}`}
+                                                onClick={() => jumpToCrumb(idx)}
+                                                disabled={isLast || loading}
+                                                aria-current={isLast ? "page" : undefined}
+                                            >
+                                                {crumb.label}
+                                            </button>
+                                        </li>
+                                        <span className={`${styles.bcsep} ${isLast ? "hideele" : "showele"}`}> /</span>
+                                    </div>
                                 );
                             })}
                         </ol>

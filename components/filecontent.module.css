@@ -74,21 +74,32 @@
             pointer-events: none;
         }
 
-        /* .crumblist{
-
+        .crumblist{
+            list-style: none;
+            margin: 0;
+            padding: 0;
         }
         .crumb{
-
+            color: var(--orange);
         }
         .crumb:hover{
-
+            color: var(--orangeHvr);
         }
         .crumbBtn{
-
+            background: none;
+            border: none;
+            font-family: inherit;
+            margin: 0;
+            padding: 0;
+            font-size: 16px;
         }
         .crumbActive{
-
-        } */
+            color: var(--darktext);
+        }
+        .bcsep{
+            font-size: 16px;
+            color: var(--darktext);
+        }
         
     .dataCont{
         gap: var(--padd);
