@@ -197,7 +197,7 @@ export function FileContent() {
                                         <li key={crumb.id}>
                                             <button
                                                 type="button"
-                                                className={`${styles.crumbBtn} ${isLast ? styles.crumbActive : ""}`}
+                                                className={`${styles.crumbBtn} ${isLast ? styles.crumbActive : styles.inact}`}
                                                 onClick={() => jumpToCrumb(idx)}
                                                 disabled={isLast || loading}
                                                 aria-current={isLast ? "page" : undefined}
