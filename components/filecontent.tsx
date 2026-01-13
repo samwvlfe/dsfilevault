@@ -108,7 +108,7 @@ export function FileContent() {
     }
 
     useEffect(() => {
-        setCurrentLabel("All Folders");
+        setCurrentLabel("Home");
         setNameHistory([]);
         // initial root load
         load();
@@ -167,7 +167,7 @@ export function FileContent() {
 
             // restore label in sync
             setNameHistory((nh) => {
-                const prevLabel = nh[nh.length - 1] ?? "All Folders";
+                const prevLabel = nh[nh.length - 1] ?? "Home";
                 setCurrentLabel(prevLabel);
                 return nh.slice(0, -1);
             });
@@ -196,6 +196,7 @@ export function FileContent() {
                     <span style={{ fontSize: 20 }}>
                         <strong>{currentLabel}</strong>
                     </span>
+                    <div className="searchbar"><input type="search" name="filesearch" id="filesearch" value={'search for files'}/></div>
                     <div>
                         <span>
                             <span className={styles.folderTxt}>{folders.length} Folder{folders.length !== 1 ? "s" : ""}</span>, <span className={styles.fileTxt}>{files.length} File{files.length !== 1 ? "s" : ""}</span>
@@ -210,7 +211,7 @@ export function FileContent() {
 
             {/* DATA LIST */}
             {!loading && <div className={`${styles.dataCont} stack`}>
-                <div className="row apart"><div>Folders</div><div style={{ content: "\u2304" }}></div></div>
+                {/* <div className="row apart"><div>Folders</div><div style={{ content: "\u2304" }}></div></div> */}
                 {/* FOLDERS CONTAINER */}
                 <div className={styles.folderGrid}>
                     {folders.length > 0 ? (
@@ -255,7 +256,7 @@ export function FileContent() {
                 </div>
                 
                 {/* FILES CONTAINER */}
-                <div className="row apart"><div>Files</div><div style={{ content: "\u2304" }}></div></div>
+                {/* <div className="row apart"><div>Files</div><div style={{ content: "\u2304" }}></div></div> */}
                 <div className={styles.fileGrid}>
                     {files.length > 0 ? (
                         files.map((item) => {
