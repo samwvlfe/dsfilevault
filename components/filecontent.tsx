@@ -193,8 +193,8 @@ export function FileContent() {
                                 const isLast = idx == crumbs.length - 1;
 
                                 return (
-                                    <div>
-                                        <li key={crumb.id} className={styles.crumb}>
+                                    <div className="row center">
+                                        <li key={crumb.id}>
                                             <button
                                                 type="button"
                                                 className={`${styles.crumbBtn} ${isLast ? styles.crumbActive : ""}`}
@@ -205,7 +205,7 @@ export function FileContent() {
                                                 {crumb.label}
                                             </button>
                                         </li>
-                                        <span className={`${styles.bcsep} ${isLast ? "hideele" : "showele"}`}> /</span>
+                                        <div className={`${styles.bcsep} ${isLast ? "hideele" : "showele"}`}> /</div>
                                     </div>
                                 );
                             })}
