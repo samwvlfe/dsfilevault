@@ -210,8 +210,9 @@ export function FileContent() {
 
             {/* DATA LIST */}
             {!loading && <div className={`${styles.dataCont} stack`}>
+                <div className="row apart"><div>Folders</div><div style={{ content: "\u2304" }}></div></div>
                 {/* FOLDERS CONTAINER */}
-                <div className={styles.folderCont}>
+                <div className={styles.folderGrid}>
                     {folders.length > 0 ? (
                         folders.map((item) => {
                             const created = formatDate(item.createdDateTime);
@@ -252,9 +253,10 @@ export function FileContent() {
                     !loading && !error && <div className={styles.emptySection}>No folders.</div>
                     )}
                 </div>
-
+                
                 {/* FILES CONTAINER */}
-                <div className={styles.fileCont}>
+                <div className="row apart"><div>Files</div><div style={{ content: "\u2304" }}></div></div>
+                <div className={styles.fileGrid}>
                     {files.length > 0 ? (
                         files.map((item) => {
                             const fileType = item.name.split(".").pop()?.toLowerCase();
