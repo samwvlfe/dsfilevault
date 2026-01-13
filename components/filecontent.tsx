@@ -209,7 +209,7 @@ export function FileContent() {
             {error && <div style={{ color: "red" }}>{error}</div>}
 
             {/* DATA LIST */}
-            <div className={`${styles.dataCont} stack`}>
+            {!loading && <div className={`${styles.dataCont} stack`}>
                 {/* FOLDERS CONTAINER */}
                 <div className={styles.folderCont}>
                     {folders.length > 0 ? (
@@ -335,7 +335,7 @@ export function FileContent() {
                 {!loading && !error && folders.length === 0 && files.length === 0 && (
                     <div>No items found.</div>
                 )}
-            </div>
+            </div>}
 
         </div>
     );
