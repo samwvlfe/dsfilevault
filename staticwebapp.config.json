@@ -12,9 +12,9 @@
   },
   "routes": [
     { "route": "/login", "redirect": "/.auth/login/aad" },
-    { "route": "/logout", "redirect": "/.auth/logout?post_logout_redirect_uri=/signed-out" },
     { "route": "/api/*", "allowedRoles": ["authenticated"] },
-    { "route": "/*", "allowedRoles": ["authenticated"] }
+    { "route": "/*", "allowedRoles": ["authenticated"] },
+    { "route": "/logout", "redirect": "/.auth/logout?post_logout_redirect_uri=https%3A%2F%2Fdockstarindustrial.com" }
   ],
   "responseOverrides": {
     "401": { "statusCode": 302, "redirect": "/login" }
