@@ -64,12 +64,12 @@
             left: 0;
         }
         .backButtonShown {
-            opacity: 1;
+            display: block;
             transform: translateX(0);
             pointer-events: auto;
         }
         .backButtonHidden {
-            opacity: 0;
+            display: none;
             transform: translateX(-8px);
             pointer-events: none;
         }
@@ -86,13 +86,16 @@
             margin: 0;
             padding: 0;
             font-size: 16px;
-            color: var(--darktext);
+            color: var(--orange);
         }
         .crumbActive{
-            color: var(--orange);
+            color: var(--darktext);
+            text-decoration: underline;
         }
         .crumbActive:hover{
             color: var(--orangeHvr);
+        }
+        .inact:hover{
             cursor: pointer;
         }
         .bcsep{
@@ -133,7 +136,7 @@
             color: var(--black);
         }
         .foldName{
-            width: 70%;
+            width: 75%;
             font-size: 13px;
             font-weight: bold;
             color: var(--black);

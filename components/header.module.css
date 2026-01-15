@@ -4,7 +4,7 @@
     padding: var(--padd);
     align-items: center;
     color: var(--whitetext);
-
+    position: relative;
 }
     .logo{
         width: 190px;
@@ -19,4 +19,18 @@
     .user{
         font-size: 20px;
         align-self: flex-end;
+    }
+    .logoutbtn{
+        position: absolute;
+        top: 10px;
+        right: var(--padd);
+    }
+    .logoutbtn a{
+        color: var(--whitetext);
+        text-decoration: none;
+        font-size: 13px;
+    }
+    .logoutbtn a:hover{
+        color: var(--orange);
+        text-decoration: underline;
     }

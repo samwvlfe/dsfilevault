@@ -178,6 +178,7 @@ export function FileContent() {
             {/* TOP ROW */}
             <div className={`${styles.toprow} row center`}>
                 <button
+                    type="button"
                     className={`${styles.backButton} ${atRoot ? styles.backButtonHidden : styles.backButtonShown}`}
                     onClick={goBack}
                     disabled={atRoot || loading}
@@ -186,12 +187,13 @@ export function FileContent() {
                 >
                     <span>Back</span>
                 </button>
+                {/* BREADCRUMBS */}
                 <div className={`${styles.labels} row center apart`}>
                     <nav aria-label="Breadcrumb">
                         <ol className={`${styles.crumblist} row center`}>
+
                             {crumbs.map((crumb, idx) => {
                                 const isLast = idx == crumbs.length - 1;
-
                                 return (
                                     <div className="row center">
                                         <li key={crumb.id}>
@@ -209,6 +211,7 @@ export function FileContent() {
                                     </div>
                                 );
                             })}
+
                         </ol>
                     </nav>
                     {/* <span style={{ fontSize: 20 }}>
