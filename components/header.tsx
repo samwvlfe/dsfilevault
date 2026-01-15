@@ -52,9 +52,9 @@ export function Header() {
             />
             <div className={styles.title}>DOCKSTAR FILE VAULT</div>
             <div className={styles.user}>{namestrip ? `Welcome, ${namestrip}!` : "Welcome!"}</div>
-            <div className={styles.logoutbtn}>
-                <a href="/.auth/logout">Logout</a>
-            </div>
+            {/* <div className={styles.logoutbtn}>
+                <a href="/logout">Logout</a>
+            </div> */}
         </div>
     );
 }
