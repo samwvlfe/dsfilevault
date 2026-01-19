@@ -165,12 +165,8 @@ function buildChildrenUrl({ driveId, parentId }) {
     "lastModifiedBy",
     "file",
     "folder",
+    "parentReference",
   ].join(",");
-
-  const q =
-    (req.query && (req.query.q || req.query.search)) ||
-    (req.params && (req.params.q || req.params.search)) ||
-    null;
 
   const base =
     parentId && parentId !== "root"
@@ -181,7 +177,7 @@ function buildChildrenUrl({ driveId, parentId }) {
 }
 
 function escapeSearchQuery(s) {
-  // Graph uses single quotes in search(q='...') so escape them by doubling
+  // Escape single quotes for search(q='...')
   return String(s).replace(/'/g, "''");
 }
 
@@ -197,46 +193,44 @@ function buildSearchUrl({ driveId, parentId, q }) {
     "lastModifiedBy",
     "file",
     "folder",
+    "parentReference",
   ].join(",");
+
+  const safeQ = encodeURIComponent(escapeSearchQuery(q));
 
   const base =
     parentId && parentId !== "root"
-      ? `${graphBase}/drives/${driveId}/items/${parentId}/search(q='${encodeURIComponent(
-          escapeSearchQuery(q)
-        )}')`
-      : `${graphBase}/drives/${driveId}/root/search(q='${encodeURIComponent(
-          escapeSearchQuery(q)
-        )}')`;
+      ? `${graphBase}/drives/${driveId}/items/${parentId}/search(q='${safeQ}')`
+      : `${graphBase}/drives/${driveId}/root/search(q='${safeQ}')`;
 
   return `${base}?$select=${encodeURIComponent(select)}&$top=200`;
 }
-
 
 module.exports = async function (context, req) {
   try {
     const hostname = process.env.SP_HOSTNAME;
     const sitePath = process.env.SP_SITE_PATH;
 
-    // Use query param ?parentId=... to get children of a selected folder
-    // If omitted (or parentId=root), you get the root directory listing.
     const parentId =
       (req.query && (req.query.parentId || req.query.itemId)) ||
       (req.params && (req.params.parentId || req.params.itemId)) ||
       null;
 
+    // ✅ DEFINE q HERE
+    const q =
+      (req.query && (req.query.q || req.query.search)) ||
+      (req.params && (req.params.q || req.params.search)) ||
+      null;
+
     const token = await getToken();
-
-    // 1) Resolve site by hostname + path
     const site = await resolveSite({ hostname, sitePath }, token);
-
-    // 2) Resolve drive (document library)
     const driveId = await resolveDriveId(site.id, token);
 
-    // 3) List root children OR folder children OR search off params
-    const url = q ? buildSearchUrl({ driveId, parentId, q }) : buildChildrenUrl({ driveId, parentId });
+    const url = q
+      ? buildSearchUrl({ driveId, parentId, q })
+      : buildChildrenUrl({ driveId, parentId });
 
     const items = await graphGetAll(url, token);
-
 
     context.res = {
       status: 200,
@@ -245,9 +239,9 @@ module.exports = async function (context, req) {
         site: { id: site.id, name: site.name, webUrl: site.webUrl },
         drive: { id: driveId },
         parentId: parentId || "root",
+        q: q || null,
         count: items.length,
         items: items.map(mapDriveItem),
-        q: q || null,
       },
     };
   } catch (e) {
