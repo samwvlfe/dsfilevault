@@ -167,6 +167,11 @@ function buildChildrenUrl({ driveId, parentId }) {
     "folder",
   ].join(",");
 
+  const q =
+    (req.query && (req.query.q || req.query.search)) ||
+    (req.params && (req.params.q || req.params.search)) ||
+    null;
+
   const base =
     parentId && parentId !== "root"
       ? `${graphBase}/drives/${driveId}/items/${parentId}/children`
@@ -174,6 +179,38 @@ function buildChildrenUrl({ driveId, parentId }) {
 
   return `${base}?$select=${encodeURIComponent(select)}&$top=200`;
 }
+
+function escapeSearchQuery(s) {
+  // Graph uses single quotes in search(q='...') so escape them by doubling
+  return String(s).replace(/'/g, "''");
+}
+
+function buildSearchUrl({ driveId, parentId, q }) {
+  const select = [
+    "id",
+    "name",
+    "webUrl",
+    "size",
+    "createdDateTime",
+    "lastModifiedDateTime",
+    "createdBy",
+    "lastModifiedBy",
+    "file",
+    "folder",
+  ].join(",");
+
+  const base =
+    parentId && parentId !== "root"
+      ? `${graphBase}/drives/${driveId}/items/${parentId}/search(q='${encodeURIComponent(
+          escapeSearchQuery(q)
+        )}')`
+      : `${graphBase}/drives/${driveId}/root/search(q='${encodeURIComponent(
+          escapeSearchQuery(q)
+        )}')`;
+
+  return `${base}?$select=${encodeURIComponent(select)}&$top=200`;
+}
+
 
 module.exports = async function (context, req) {
   try {
@@ -195,9 +232,11 @@ module.exports = async function (context, req) {
     // 2) Resolve drive (document library)
     const driveId = await resolveDriveId(site.id, token);
 
-    // 3) List root children OR folder children
-    const url = buildChildrenUrl({ driveId, parentId });
+    // 3) List root children OR folder children OR search off params
+    const url = q ? buildSearchUrl({ driveId, parentId, q }) : buildChildrenUrl({ driveId, parentId });
+
     const items = await graphGetAll(url, token);
+
 
     context.res = {
       status: 200,
@@ -208,6 +247,7 @@ module.exports = async function (context, req) {
         parentId: parentId || "root",
         count: items.length,
         items: items.map(mapDriveItem),
+        q: q || null,
       },
     };
   } catch (e) {
