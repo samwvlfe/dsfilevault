@@ -161,9 +161,6 @@
     .docBubble:hover{
         cursor: pointer;
         }
-        .docIconwrap{
-            width: 50px;
-        }
         .docIcon{
             height: 100%;;
         }

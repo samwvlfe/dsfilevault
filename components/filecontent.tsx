@@ -412,15 +412,13 @@ export function FileContent() {
                                     style={{ cursor: "pointer" }}
                                     title="Open folder"
                                 >
-                                    <div className={styles.docIconwrap}>
-                                        <Image
-                                            className={styles.docIcon}
-                                            src={foldericon}
-                                            alt="folder icon"
-                                            width={536}
-                                            height={388}
-                                        />
-                                    </div>
+                                    <Image
+                                        className={styles.docIcon}
+                                        src={foldericon}
+                                        alt="folder icon"
+                                        width={536}
+                                        height={388}
+                                    />
 
                                     <div className={`${styles.docInfo} row`}>
                                         <div className={styles.foldName}>{item.name}</div>
