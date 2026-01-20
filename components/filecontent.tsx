@@ -360,22 +360,24 @@ export function FileContent() {
                                         const icon = r.type === "folder" ? foldericon : setIcon(r.name);
 
                                         return(
-                                            <button
-                                                key={r.id}
-                                                type="button"
-                                                onMouseDown={(e) => e.preventDefault()}
-                                                onClick={() => onPickSearchResult(r)}
-                                                className={`${styles.result} row center`}
-                                            >
-                                                <Image
-                                                    className={styles.resultimg}
-                                                    src={icon}
-                                                    alt={r.type === "folder" ? "Folder icon" : "File Icon"}
-                                                    width={1201}
-                                                    height={872}
-                                                />
-                                                <div className="resultname">{r.name}</div>
-                                            </button>
+                                            <div className={styles.reswrap}>
+                                                <button
+                                                    key={r.id}
+                                                    type="button"
+                                                    onMouseDown={(e) => e.preventDefault()}
+                                                    onClick={() => onPickSearchResult(r)}
+                                                    className={`${styles.result} row center`}
+                                                >
+                                                    <Image
+                                                        className={styles.resultimg}
+                                                        src={icon}
+                                                        alt={r.type === "folder" ? "Folder icon" : "File Icon"}
+                                                        width={1201}
+                                                        height={872}
+                                                    />
+                                                    <div className="resultname">{r.name}</div>
+                                                </button>
+                                            </div>
                                         );
                                     })}
                                 </div>

@@ -19,6 +19,7 @@
             max-height: 225px;
             overflow: auto;
             border: 1px solid var(--lighttext);
+            border-top: none;
             width: 120%;
             background-color: #ffffff;
             margin-top: 3px;
@@ -32,6 +33,10 @@
             }
             .resultsCont .result:hover{
                 background-color: var(--background);
+                cursor: pointer;
+            }
+            .reswrap{
+                border: 1px solid var(--lighttext);
             }
         .resultsCont .resultimg{
             height: 20px;
