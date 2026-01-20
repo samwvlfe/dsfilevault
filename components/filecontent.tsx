@@ -57,10 +57,10 @@ type Crumb = {
 };
 
 type SearchResultItem = {
-  id: string;
-  name: string;
-  type: "folder" | "file";
-  webUrl?: string | null;
+    id: string;
+    name: string;
+    type: "folder" | "file";
+    webUrl?: string | null;
 };
 
 // ####### helper funcs for formatting data #######
@@ -108,7 +108,48 @@ export function FileContent() {
         }, [value, delayMs]);
         return debounced;
     }
+
     const debouncedSearchText = useDebouncedValue(searchText, 200);
+
+    useEffect(() => {
+        const url = buildSearchUrl(debouncedSearchText);
+
+        // empty input => close dropdown + clear
+        if (!url) {
+            setSearchResults([]);
+            setSearchOpen(false);
+            setSearchLoading(false);
+            setSearchError(null);
+            return;
+        }
+
+        const ac = new AbortController();
+
+        (async () => {
+            try {
+                setSearchLoading(true);
+                setSearchError(null);
+                setSearchOpen(true);
+
+                const res = await fetch(url, { signal: ac.signal });
+                if (!res.ok) throw new Error(`Search failed: ${res.status}`);
+
+                // your search endpoint should return { items: [...] }
+                const data = (await res.json()) as { items: SearchResultItem[] };
+
+                setSearchResults(data.items ?? []);
+            } catch (e: any) {
+                if (e?.name === "AbortError") return;
+                setSearchError(e?.message ?? String(e));
+                setSearchResults([]);
+            } finally {
+                setSearchLoading(false);
+            }
+        })();
+
+        return () => ac.abort();
+    }, [debouncedSearchText]);
+
 
     //load files/folders from API
     async function load(parent?: string) {
@@ -174,7 +215,10 @@ export function FileContent() {
         }
     }
 
-    function setIcon(filetype: string | undefined){
+
+    function setIcon(name: string | undefined){
+        const filetype = name?.split(".").pop()?.toLowerCase() || undefined;
+
         switch (filetype) {
             case "pdf":
                 return pdficon;
@@ -221,6 +265,14 @@ export function FileContent() {
     }
 
     // ############## Search Logic ##############
+    function buildSearchUrl(q: string) {
+        const query = q.trim();
+
+        if (!query) return null;
+
+        return `/api/files?q=${query}`;
+    }
+
     function onPickSearchResult(item: SearchResultItem) {
         setSearchOpen(false);
 
@@ -289,7 +341,9 @@ export function FileContent() {
                             <span className={styles.folderTxt}>{folders.length} Folder{folders.length !== 1 ? "s" : ""}</span>, <span className={styles.fileTxt}>{files.length} File{files.length !== 1 ? "s" : ""}</span>
                         </span>
                         <div className={styles.searchCont}>
+
                             <input
+                                id="searchbar"
                                 value={searchText}
                                 onChange={(e) => setSearchText(e.target.value)}
                                 onFocus={() => searchText.trim() && setSearchOpen(true)}
@@ -297,40 +351,35 @@ export function FileContent() {
                                 placeholder="Search…"
                                 className={styles.searchimp}
                             />
-                            <div className={styles.resultsCont}>
-                                <button
-                                    key="key"
-                                    type="button"
-                                    // onClick={() => onPickSearchResult(r)}
-                                    className={`${styles.result} row center`}
-                                >
-                                    <Image
-                                        className={styles.resultimg}
-                                        src={foldericon}
-                                        alt="folder icon"
-                                        width={1201}
-                                        height={872}
-                                    />
-                                    <div className="resultname">Name of folder</div>
 
-                                </button>
-                                <button
-                                    key="key"
-                                    type="button"
-                                    // onClick={() => onPickSearchResult(r)}
-                                    className={`${styles.result} row center`}
-                                >
-                                    <Image
-                                        className={styles.resultimg}
-                                        src={pdficon}
-                                        alt="file icon"
-                                        width={1201}
-                                        height={872}
-                                    />
-                                    <div className="resultname">Name of File</div>
+                            {searchOpen && searchResults.length > 0 && (
 
-                                </button>
-                            </div>
+                                <div className={styles.resultsCont}>
+
+                                    {searchResults.slice(0, 12).map((r) => {
+                                        const icon = r.type === "folder" ? foldericon : setIcon(r.name);
+
+                                        return(
+                                            <button
+                                                key={r.id}
+                                                type="button"
+                                                onMouseDown={(e) => e.preventDefault()}
+                                                onClick={() => onPickSearchResult(r)}
+                                                className={`${styles.result} row center`}
+                                            >
+                                                <Image
+                                                    className={styles.resultimg}
+                                                    src={icon}
+                                                    alt={r.type === "folder" ? "Folder icon" : "File Icon"}
+                                                    width={1201}
+                                                    height={872}
+                                                />
+                                                <div className="resultname">{r.name}</div>
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -385,8 +434,7 @@ export function FileContent() {
                 <div className={styles.fileGrid}>
                     {files.length > 0 ? (
                         files.map((item) => {
-                            const fileType = item.name.split(".").pop()?.toLowerCase();
-                            let icon = setIcon(fileType);
+                            let icon = setIcon(item.name);
 
                             const created = formatDate(item.createdDateTime);
                             const sizeOrCount = formatBytes(item.size);

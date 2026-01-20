@@ -10,18 +10,26 @@
         position: relative;
         }
         .searchCont .searchimp{
-            padding: "10px 12px";
+            padding: 6px 12px;
             border-radius: 10px;
             border: 1px solid var(--lighttext);
         }
         .resultsCont{
             position: absolute;
-            max-height: 400px;
+            max-height: 225px;
             overflow: auto;
             border: 1px solid var(--lighttext);
+            width: 100%;
+            background-color: #ffffff;
+            margin-top: 3px;
+            gap: 3px;
+            display: flex;
+            flex-direction: column;
         }
         .resultsCont .result{
-            border-top: 1px solid var(--darktext);
+            border: none;
+            width: 100%;
+            background: none;
         }
         .resultsCont .resultimg{
             height: 20px;
@@ -29,7 +37,8 @@
         }
         .resultsCont .resultname{
             font-size: 10px;
-            color: var(--darktext)
+            color: var(--darktext);
+            font-family: inherit;
         }
     .toprow{
         width: 100%;
