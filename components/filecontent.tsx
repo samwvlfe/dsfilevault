@@ -412,13 +412,15 @@ export function FileContent() {
                                     style={{ cursor: "pointer" }}
                                     title="Open folder"
                                 >
-                                    <Image
-                                        className={styles.docIcon}
-                                        src={foldericon}
-                                        alt="folder icon"
-                                        width={536}
-                                        height={388}
-                                    />
+                                    <div className={styles.docIconwrap}>
+                                        <Image
+                                            className={styles.docIcon}
+                                            src={foldericon}
+                                            alt="folder icon"
+                                            width={536}
+                                            height={388}
+                                        />
+                                    </div>
 
                                     <div className={`${styles.docInfo} row`}>
                                         <div className={styles.foldName}>{item.name}</div>
@@ -454,13 +456,15 @@ export function FileContent() {
                                 style={{ cursor: "pointer" }}
                                 title={item.name}
                             >
-                                <Image
-                                    className={styles.docIcon}
-                                    src={icon}
-                                    alt="file icon"
-                                    width={1201}
-                                    height={872}
-                                />
+                                <div className={styles.docIconwrap}>
+                                    <Image
+                                        className={styles.docIcon}
+                                        src={icon}
+                                        alt="file icon"
+                                        width={1201}
+                                        height={872}
+                                    />
+                                </div>
 
                                 <div className={`${styles.docInfo} stack`}>
                                     <div className={styles.docName}>{item.name}</div>

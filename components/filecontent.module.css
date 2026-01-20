@@ -19,7 +19,6 @@
             max-height: 225px;
             overflow: auto;
             border: 1px solid var(--lighttext);
-            border-top: none;
             width: 120%;
             background-color: #ffffff;
             margin-top: 3px;
@@ -36,7 +35,7 @@
                 cursor: pointer;
             }
             .reswrap{
-                border: 1px solid var(--lighttext);
+                border-bottom: 1px solid var(--lighttext);
             }
         .resultsCont .resultimg{
             height: 20px;
@@ -162,9 +161,11 @@
     .docBubble:hover{
         cursor: pointer;
         }
-        .docIcon{
-            height: auto;
+        .docIconwrap{
             width: 50px;
+        }
+        .docIcon{
+            height: 100%;;
         }
         .docInfo{
             margin: 0 0 0 10px;
@@ -228,3 +229,15 @@
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
     }
+
+@media (max-width: 1100px) {
+    .foldName{
+        font-size: 11px;
+    }
+    .docName{
+        font-size: 12px;
+    }
+    .folderGrid{
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
