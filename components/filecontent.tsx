@@ -295,7 +295,7 @@ export function FileContent() {
     return (
         <div className={styles.wrapper}>
             {/* TOP ROW */}
-            <div className={`${styles.toprow} row center`}>
+            <div className={`${styles.toprow} stack`}>
                 {/* UPPER */}
                 <div className={styles.tr_lvl}>
                     {/* back button */}
@@ -456,15 +456,13 @@ export function FileContent() {
                                 style={{ cursor: "pointer" }}
                                 title={item.name}
                             >
-                                <div className={styles.docIconwrap}>
-                                    <Image
-                                        className={styles.docIcon}
-                                        src={icon}
-                                        alt="file icon"
-                                        width={1201}
-                                        height={872}
-                                    />
-                                </div>
+                                <Image
+                                    className={styles.docIcon}
+                                    src={icon}
+                                    alt="file icon"
+                                    width={1201}
+                                    height={872}
+                                />
 
                                 <div className={`${styles.docInfo} stack`}>
                                     <div className={styles.docName}>{item.name}</div>

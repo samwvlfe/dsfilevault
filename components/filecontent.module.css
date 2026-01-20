@@ -47,7 +47,7 @@
         }
     .toprow{
         width: 100%;
-        gap: var(--padd);
+        gap: 10px;
         padding: 10px 0;
         position: sticky;
         top: 0;
@@ -167,7 +167,8 @@
         cursor: pointer;
         }
         .docIcon{
-            height: 100%;;
+            width: 50px;
+            height: auto;
         }
         .docInfo{
             margin: 0 0 0 10px;
