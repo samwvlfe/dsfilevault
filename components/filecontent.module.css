@@ -19,7 +19,7 @@
             max-height: 225px;
             overflow: auto;
             border: 1px solid var(--lighttext);
-            width: 100%;
+            width: 120%;
             background-color: #ffffff;
             margin-top: 3px;
             gap: 3px;
@@ -28,9 +28,11 @@
         }
         .resultsCont .result{
             border: none;
-            width: 100%;
             background: none;
-        }
+            }
+            .resultsCont .result:hover{
+                background-color: var(--background);
+            }
         .resultsCont .resultimg{
             height: 20px;
             width: auto;
