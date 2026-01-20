@@ -6,7 +6,6 @@
     position: relative;
     }
     .searchCont{
-        align-self: end;
         position: relative;
         }
         .searchCont .searchimp{
@@ -54,8 +53,9 @@
         top: 0;
         background-color: var(--background);
         }
-        .labels{
-            flex: 1;
+        .tr_lvl{
+            display: flex;
+            align-items: center;
             justify-content: space-between;
         }
         .searchbar{
@@ -120,25 +120,30 @@
             list-style: none;
             margin: 0;
             padding: 0;
-        }            
+            flex-wrap: wrap;
+        }   
+        .crumblist li{
+            flex: 0 0 auto;
+        }         
         .crumbBtn{
             background: none;
             border: none;
             font-family: inherit;
             margin: 0;
             padding: 0;
-            font-size: 16px;
+            font-size: 14px;
             color: var(--orange);
         }
         .crumbActive{
             color: var(--darktext);
             text-decoration: underline;
         }
-        .crumbActive:hover{
+        /* .crumbActive:hover{
             color: var(--orangeHvr);
-        }
+        } */
         .inact:hover{
             cursor: pointer;
+            color: var(--orangeHvr);
         }
         .bcsep{
             font-size: 16px;

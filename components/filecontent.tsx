@@ -296,21 +296,71 @@ export function FileContent() {
         <div className={styles.wrapper}>
             {/* TOP ROW */}
             <div className={`${styles.toprow} row center`}>
-                <button
-                    type="button"
-                    className={`${styles.backButton} ${atRoot ? styles.backButtonHidden : styles.backButtonShown}`}
-                    onClick={goBack}
-                    disabled={atRoot || loading}
-                    aria-disabled={atRoot || loading}
-                    style={{ visibility: atRoot ? "hidden" : "visible" }}
-                >
-                    <span>Back</span>
-                </button>
-                {/* BREADCRUMBS */}
-                <div className={`${styles.labels} row center`}>
+                {/* UPPER */}
+                <div className={styles.tr_lvl}>
+                    {/* back button */}
+                    <button
+                        type="button"
+                        className={`${styles.backButton} ${atRoot ? styles.backButtonHidden : styles.backButtonShown}`}
+                        onClick={goBack}
+                        disabled={atRoot || loading}
+                        aria-disabled={atRoot || loading}
+                        style={{ visibility: atRoot ? "hidden" : "visible" }}
+                    >
+                        <span>Back</span>
+                    </button>
+
+                    {/* search */}
+                    <div className={styles.searchCont}>
+
+                        <input
+                            id="searchbar"
+                            value={searchText}
+                            onChange={(e) => setSearchText(e.target.value)}
+                            onFocus={() => searchText.trim() && setSearchOpen(true)}
+                            onBlur={() => setTimeout(() => setSearchOpen(false), 150)}
+                            placeholder="Search…"
+                            className={styles.searchimp}
+                        />
+
+                        {searchOpen && searchResults.length > 0 && (
+
+                            <div className={styles.resultsCont}>
+
+                                {searchResults.slice(0, 12).map((r) => {
+                                    const icon = r.type === "folder" ? foldericon : setIcon(r.name);
+
+                                    return(
+                                        <div className={styles.reswrap}>
+                                            <button
+                                                key={r.id}
+                                                type="button"
+                                                onMouseDown={(e) => e.preventDefault()}
+                                                onClick={() => onPickSearchResult(r)}
+                                                className={`${styles.result} row center`}
+                                            >
+                                                <Image
+                                                    className={styles.resultimg}
+                                                    src={icon}
+                                                    alt={r.type === "folder" ? "Folder icon" : "File Icon"}
+                                                    width={1201}
+                                                    height={872}
+                                                />
+                                                <div className="resultname">{r.name}</div>
+                                            </button>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        )}
+                    </div>
+                </div> {/* /upper */}
+
+                {/* LOWER */}
+                <div className={styles.tr_lvl}>
+                    {/* BREADCRUMBS */}
                     <nav aria-label="Breadcrumb">
                         <ol className={`${styles.crumblist} row center`}>
-
                             {crumbs.map((crumb, idx) => {
                                 const isLast = idx == crumbs.length - 1;
                                 return (
@@ -330,62 +380,14 @@ export function FileContent() {
                                     </div>
                                 );
                             })}
-
                         </ol>
                     </nav>
-                    {/* <span style={{ fontSize: 20 }}>
-                        <strong>{currentLabel}</strong>
-                    </span> */}
-                    <div className="tg">
-                        <span>
-                            <span className={styles.folderTxt}>{folders.length} Folder{folders.length !== 1 ? "s" : ""}</span>, <span className={styles.fileTxt}>{files.length} File{files.length !== 1 ? "s" : ""}</span>
-                        </span>
-                        <div className={styles.searchCont}>
 
-                            <input
-                                id="searchbar"
-                                value={searchText}
-                                onChange={(e) => setSearchText(e.target.value)}
-                                onFocus={() => searchText.trim() && setSearchOpen(true)}
-                                onBlur={() => setTimeout(() => setSearchOpen(false), 150)}
-                                placeholder="Search…"
-                                className={styles.searchimp}
-                            />
-
-                            {searchOpen && searchResults.length > 0 && (
-
-                                <div className={styles.resultsCont}>
-
-                                    {searchResults.slice(0, 12).map((r) => {
-                                        const icon = r.type === "folder" ? foldericon : setIcon(r.name);
-
-                                        return(
-                                            <div className={styles.reswrap}>
-                                                <button
-                                                    key={r.id}
-                                                    type="button"
-                                                    onMouseDown={(e) => e.preventDefault()}
-                                                    onClick={() => onPickSearchResult(r)}
-                                                    className={`${styles.result} row center`}
-                                                >
-                                                    <Image
-                                                        className={styles.resultimg}
-                                                        src={icon}
-                                                        alt={r.type === "folder" ? "Folder icon" : "File Icon"}
-                                                        width={1201}
-                                                        height={872}
-                                                    />
-                                                    <div className="resultname">{r.name}</div>
-                                                </button>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </div>
+                    <span>
+                        <span className={styles.folderTxt}>{folders.length} Folder{folders.length !== 1 ? "s" : ""}</span>, <span className={styles.fileTxt}>{files.length} File{files.length !== 1 ? "s" : ""}</span>
+                    </span>
+                </div> {/* /lower */}
+            </div> {/* /toprow */}
 
             {/* LOADING / ERROR */}
             {loading && <div>Loading…</div>}
