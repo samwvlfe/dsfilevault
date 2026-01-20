@@ -41,6 +41,7 @@
         }
         .labels{
             flex: 1;
+            justify-content: space-between;
         }
         .searchbar{
             width: 200px;

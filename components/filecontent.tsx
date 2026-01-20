@@ -242,50 +242,6 @@ export function FileContent() {
 
     return (
         <div className={styles.wrapper}>
-            <div className={styles.searchCont}>
-                <input
-                    value={searchText}
-                    onChange={(e) => setSearchText(e.target.value)}
-                    onFocus={() => searchText.trim() && setSearchOpen(true)}
-                    onBlur={() => setTimeout(() => setSearchOpen(false), 150)}
-                    placeholder="Search…"
-                    className={styles.searchimp}
-                />
-                <div className={styles.resultsCont}>
-                    <button
-                        key="key"
-                        type="button"
-                        // onClick={() => onPickSearchResult(r)}
-                        className={`${styles.result} row center`}
-                    >
-                        <Image
-                            className={styles.resultimg}
-                            src={foldericon}
-                            alt="folder icon"
-                            width={1201}
-                            height={872}
-                        />
-                        <div className="resultname">Name of folder</div>
-
-                    </button>
-                    <button
-                        key="key"
-                        type="button"
-                        // onClick={() => onPickSearchResult(r)}
-                        className={`${styles.result} row center`}
-                    >
-                        <Image
-                            className={styles.resultimg}
-                            src={pdficon}
-                            alt="file icon"
-                            width={1201}
-                            height={872}
-                        />
-                        <div className="resultname">Name of File</div>
-
-                    </button>
-                </div>
-            </div>
             {/* TOP ROW */}
             <div className={`${styles.toprow} row center`}>
                 <button
@@ -299,7 +255,7 @@ export function FileContent() {
                     <span>Back</span>
                 </button>
                 {/* BREADCRUMBS */}
-                <div className={`${styles.labels} row center apart`}>
+                <div className={`${styles.labels} row center`}>
                     <nav aria-label="Breadcrumb">
                         <ol className={`${styles.crumblist} row center`}>
 
@@ -328,10 +284,54 @@ export function FileContent() {
                     {/* <span style={{ fontSize: 20 }}>
                         <strong>{currentLabel}</strong>
                     </span> */}
-                    <div>
+                    <div className="tg">
                         <span>
                             <span className={styles.folderTxt}>{folders.length} Folder{folders.length !== 1 ? "s" : ""}</span>, <span className={styles.fileTxt}>{files.length} File{files.length !== 1 ? "s" : ""}</span>
                         </span>
+                        <div className={styles.searchCont}>
+                            <input
+                                value={searchText}
+                                onChange={(e) => setSearchText(e.target.value)}
+                                onFocus={() => searchText.trim() && setSearchOpen(true)}
+                                onBlur={() => setTimeout(() => setSearchOpen(false), 150)}
+                                placeholder="Search…"
+                                className={styles.searchimp}
+                            />
+                            <div className={styles.resultsCont}>
+                                <button
+                                    key="key"
+                                    type="button"
+                                    // onClick={() => onPickSearchResult(r)}
+                                    className={`${styles.result} row center`}
+                                >
+                                    <Image
+                                        className={styles.resultimg}
+                                        src={foldericon}
+                                        alt="folder icon"
+                                        width={1201}
+                                        height={872}
+                                    />
+                                    <div className="resultname">Name of folder</div>
+
+                                </button>
+                                <button
+                                    key="key"
+                                    type="button"
+                                    // onClick={() => onPickSearchResult(r)}
+                                    className={`${styles.result} row center`}
+                                >
+                                    <Image
+                                        className={styles.resultimg}
+                                        src={pdficon}
+                                        alt="file icon"
+                                        width={1201}
+                                        height={872}
+                                    />
+                                    <div className="resultname">Name of File</div>
+
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

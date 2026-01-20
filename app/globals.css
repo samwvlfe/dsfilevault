@@ -34,7 +34,11 @@ main{
 .center{
   align-items: center;
 }
-
+.tg{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 .hideele{
   display: none;
 }
