@@ -56,6 +56,13 @@ type Crumb = {
     label: string
 };
 
+type SearchResultItem = {
+  id: string;
+  name: string;
+  type: "folder" | "file";
+  webUrl?: string | null;
+};
+
 // ####### helper funcs for formatting data #######
 
 function formatBytes(bytes?: number | null) {
@@ -84,9 +91,24 @@ export function FileContent() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [crumbs, setCrumbs] = useState<Crumb[]>([ { id: "root", label: "Home" } ]);
-
     const atRoot = crumbs.length <= 1;
-    
+
+    const [searchText, setSearchText] = useState("");
+    const [searchResults, setSearchResults] = useState<SearchResultItem[]>([]);
+    const [searchOpen, setSearchOpen] = useState(false);
+    const [searchLoading, setSearchLoading] = useState(false);
+    const [searchError, setSearchError] = useState<string | null>(null);
+
+    //Debounce so Graph is not flooded with calls
+    function useDebouncedValue<T>(value: T, delayMs: number) {
+        const [debounced, setDebounced] = useState(value);
+        useEffect(() => {
+            const t = setTimeout(() => setDebounced(value), delayMs);
+            return () => clearTimeout(t);
+        }, [value, delayMs]);
+        return debounced;
+    }
+    const debouncedSearchText = useDebouncedValue(searchText, 200);
 
     //load files/folders from API
     async function load(parent?: string) {
@@ -115,7 +137,7 @@ export function FileContent() {
         load();
     }, []);
 
-    // get all folders 
+    // sort - get all folders 
     const folders = useMemo(() => {
         return items
             .filter((x) => x.type === "folder")
@@ -123,7 +145,7 @@ export function FileContent() {
             .sort((a, b) => a.name.localeCompare(b.name));
     }, [items]);
 
-    // get all files
+    // sort - get all files
     const files = useMemo(() => {
         return items
             .filter((x) => x.type === "file")
@@ -131,25 +153,12 @@ export function FileContent() {
             .sort((a, b) => a.name.localeCompare(b.name));
     }, [items]);
 
-    // update breadcrumbs, call load() func
+
     function openFolder(item: ApiFile) {
         if (item.type !== "folder") return;
 
         setCrumbs((c) => [...c, { id: item.id, label: item.name}]);
         load(item.id);
-    }
-
-    // load the selected folder from breakdcrumb
-    function jumpToCrumb(index: number) {
-        setCrumbs((c) => {
-            const next = c.slice(0, index + 1);
-            const target = next[next.length - 1];
-
-            // load target folder
-            load(target.id === "root" ? undefined : target.id);
-
-            return next;
-        });
     }
 
     // open foolder/load file on click
@@ -165,16 +174,118 @@ export function FileContent() {
         }
     }
 
-    // navigate back to previous folder
+    function setIcon(filetype: string | undefined){
+        switch (filetype) {
+            case "pdf":
+                return pdficon;
+            case "docx":
+            case "dotx":
+            case "doc":
+                return docxicon;
+            case "mp4":
+            case "mov":
+                return mp4icon;
+            case "ppt":
+            case "pptx":
+                return pptxicon;
+            case "xls":
+            case "xlsx":
+            case "csv":
+                return xlsxicon;
+            case "jpg":
+            case "jpeg":
+            case "png":
+            case "gif":
+            case "bmp":
+            case "svg":
+                return imageicon;
+            default:
+                return defaultfile;
+        }
+    }
+
+    // ############## Breadcrumb Logic ##############
+    function jumpToCrumb(index: number) {
+        setCrumbs((c) => {
+            const next = c.slice(0, index + 1);
+            const target = next[next.length - 1];
+
+            load(target.id === "root" ? undefined : target.id);
+            return next;
+        });
+    }
+
     function goBack() {
         if (crumbs.length <= 1) return;
         jumpToCrumb(crumbs.length - 2);
     }
 
+    // ############## Search Logic ##############
+    function onPickSearchResult(item: SearchResultItem) {
+        setSearchOpen(false);
+
+        if (item.type === "file") {
+            if (item.webUrl) window.open(item.webUrl, "_blank", "noopener,noreferrer");
+            return;
+        }
+
+        // folder
+        setCrumbs([
+            { id: "root", label: "Home" },
+            { id: item.id, label: item.name },
+        ]);
+
+        load(item.id);
+    }
+
+
 
     return (
         <div className={styles.wrapper}>
+            <div className={styles.searchCont}>
+                <input
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                    onFocus={() => searchText.trim() && setSearchOpen(true)}
+                    onBlur={() => setTimeout(() => setSearchOpen(false), 150)}
+                    placeholder="Search…"
+                    className={styles.searchimp}
+                />
+                <div className={styles.resultsCont}>
+                    <button
+                        key="key"
+                        type="button"
+                        // onClick={() => onPickSearchResult(r)}
+                        className={`${styles.result} row center`}
+                    >
+                        <Image
+                            className={styles.resultimg}
+                            src={foldericon}
+                            alt="folder icon"
+                            width={1201}
+                            height={872}
+                        />
+                        <div className="resultname">Name of folder</div>
 
+                    </button>
+                    <button
+                        key="key"
+                        type="button"
+                        // onClick={() => onPickSearchResult(r)}
+                        className={`${styles.result} row center`}
+                    >
+                        <Image
+                            className={styles.resultimg}
+                            src={pdficon}
+                            alt="file icon"
+                            width={1201}
+                            height={872}
+                        />
+                        <div className="resultname">Name of File</div>
+
+                    </button>
+                </div>
+            </div>
             {/* TOP ROW */}
             <div className={`${styles.toprow} row center`}>
                 <button
@@ -231,7 +342,6 @@ export function FileContent() {
 
             {/* DATA LIST */}
             {!loading && <div className={`${styles.dataCont} stack`}>
-                {/* <div className="row apart"><div>Folders</div><div style={{ content: "\u2304" }}></div></div> */}
                 {/* FOLDERS CONTAINER */}
                 <div className={styles.folderGrid}>
                     {folders.length > 0 ? (
@@ -272,44 +382,11 @@ export function FileContent() {
                 </div>
                 
                 {/* FILES CONTAINER */}
-                {/* <div className="row apart"><div>Files</div><div style={{ content: "\u2304" }}></div></div> */}
                 <div className={styles.fileGrid}>
                     {files.length > 0 ? (
                         files.map((item) => {
                             const fileType = item.name.split(".").pop()?.toLowerCase();
-                            let icon = defaultfile;
-
-                            switch (fileType) {
-                            case "pdf":
-                                icon = pdficon;
-                                break;
-                            case "docx":
-                            case "dotx":
-                            case "doc":
-                                icon = docxicon;
-                                break;
-                            case "mp4":
-                            case "mov":
-                                icon = mp4icon;
-                                break;
-                            case "ppt":
-                            case "pptx":
-                                icon = pptxicon;
-                                break;
-                            case "xls":
-                            case "xlsx":
-                            case "csv":
-                                icon = xlsxicon;
-                                break;
-                            case "jpg":
-                            case "jpeg":
-                            case "png":
-                            case "gif":
-                            case "bmp":
-                            case "svg":
-                                icon = imageicon;
-                                break;
-                            }
+                            let icon = setIcon(fileType);
 
                             const created = formatDate(item.createdDateTime);
                             const sizeOrCount = formatBytes(item.size);

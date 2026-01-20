@@ -5,10 +5,36 @@
     gap: 10px;
     position: relative;
     }
+    .searchCont{
+        align-self: end;
+        position: relative;
+        }
+        .searchCont .searchimp{
+            padding: "10px 12px";
+            border-radius: 10px;
+            border: 1px solid var(--lighttext);
+        }
+        .resultsCont{
+            position: absolute;
+            max-height: 400px;
+            overflow: auto;
+            border: 1px solid var(--lighttext);
+        }
+        .resultsCont .result{
+            border-top: 1px solid var(--darktext);
+        }
+        .resultsCont .resultimg{
+            height: 20px;
+            width: auto;
+        }
+        .resultsCont .resultname{
+            font-size: 10px;
+            color: var(--darktext)
+        }
     .toprow{
         width: 100%;
         gap: var(--padd);
-        padding: var(--padd) 0 10px;
+        padding: 10px 0;
         position: sticky;
         top: 0;
         background-color: var(--background);
