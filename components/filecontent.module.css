@@ -106,12 +106,12 @@
             left: 0;
         }
         .backButtonShown {
-            display: block;
+            opacity: 1;
             transform: translateX(0);
             pointer-events: auto;
         }
         .backButtonHidden {
-            display: none;
+            opacity: 0;
             transform: translateX(-8px);
             pointer-events: none;
         }
@@ -233,6 +233,7 @@
         gap: 10px;
     }
 
+/* Tablet */
 @media (max-width: 1100px) {
     .foldName{
         font-size: 11px;
@@ -242,5 +243,70 @@
     }
     .folderGrid{
         grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+    .searchimp, .crumbBtn{
+        font-size: 12px;
+    }
+    .toprow span{
+        font-size: 10px;
+        letter-spacing: -.06cap;
+    }
+
+    /* Give the “bubble” a tighter mobile layout */
+    .docBubble{
+        padding: 12px;
+    }
+
+    /* Make file cards single-column on small screens */
+    .fileGrid{
+        grid-template-columns: 1fr;
+    }
+
+    /* Keep the icon from stealing width + allow text to shrink */
+    .docIcon{
+        width: 38px;
+        flex: 0 0 auto;
+    }
+
+    /* KEY: allow ellipsis/shrinking inside flex rows */
+    .docInfo{
+        min-width: 0;
+    }
+
+    /* Option A: single-line ellipsis for names */
+    .docName,
+    .foldName{
+        min-width: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+
+    /*
+    .docName{
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+        white-space: normal;
+        line-height: 1.2;
+    }
+    */
+
+    .docMeta{
+        flex-wrap: wrap;
+        gap: 6px 10px;
+    }
+
+    .foldMeta{
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 }

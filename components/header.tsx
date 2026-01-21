@@ -41,7 +41,7 @@ export function Header() {
     
 
     return (
-        <div className={`${styles.hdr} row apart`}>
+        <div className={`${styles.hdr} row`}>
             <Image
               className={styles.logo}
               src={dockstarlogo}
@@ -50,8 +50,8 @@ export function Header() {
               height={427}
               priority
             />
-            <div className={styles.title}>DOCKSTAR FILE VAULT</div>
-            <div className={styles.user}>{namestrip ? `Welcome, ${namestrip}!` : "Welcome!"}</div>
+            <div className={styles.hdr_txt}>DOCKSTAR FILE VAULT</div>
+            <div className={styles.hdr_txt}>{namestrip ? `Welcome, ${namestrip}!` : "Welcome!"}</div>
             {/* <div className={styles.logoutbtn}>
                 <a href="/logout">Logout</a>
             </div> */}
