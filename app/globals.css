@@ -50,7 +50,7 @@ main{
 }
 
 @media (max-width: 700px) {
-  .hideMibile{
+  .hideMobile{
     display: none;
   }
 }
