@@ -382,10 +382,11 @@ export function FileContent() {
                             })}
                         </ol>
                     </nav>
-
-                    <span>
-                        <span className={styles.folderTxt}>{folders.length} Folder{folders.length !== 1 ? "s" : ""}</span>, <span className={styles.fileTxt}>{files.length} File{files.length !== 1 ? "s" : ""}</span>
-                    </span>
+                    <div className="hideMobile">
+                        <span>
+                            <span className={styles.folderTxt}>{folders.length} Folder{folders.length !== 1 ? "s" : ""}</span>, <span className={styles.fileTxt}>{files.length} File{files.length !== 1 ? "s" : ""}</span>
+                        </span>
+                    </div>
                 </div> {/* /lower */}
             </div> {/* /toprow */}
 

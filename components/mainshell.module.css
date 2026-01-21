@@ -12,3 +12,9 @@
         font-size: 15px;
         color: var(--orange);
     }
+
+@media (max-width: 700px) {
+    .wrapper{
+        overflow-x: visible;
+    }
+}

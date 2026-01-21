@@ -45,3 +45,12 @@ main{
 .showele{
   display: block;
 }
+.hideMobile{
+  display: block;
+}
+
+@media (max-width: 700px) {
+  .hideMibile{
+    display: none;
+  }
+}

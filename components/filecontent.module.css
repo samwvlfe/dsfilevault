@@ -255,5 +255,12 @@
         font-size: 10px;
         letter-spacing: -.06cap;
     }
-
+    .folderGrid{
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+    .fileGrid{
+        grid-template-columns: repeat(1, 1fr);
+        gap: 10px;
+    }
 }
