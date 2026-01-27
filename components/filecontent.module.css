@@ -249,6 +249,9 @@
 
 /* Mobile */
 @media (max-width: 700px) {
+    .wrapper{
+        padding: 0 5px;
+    }
     .searchimp, .crumbBtn{
         font-size: 12px;
     }

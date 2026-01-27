@@ -323,7 +323,7 @@ export function FileContent() {
                             className={styles.searchimp}
                         />
 
-                        {/* {searchOpen && searchResults.length > 0 && ( */}
+                        {searchOpen && searchResults.length > 0 && (
 
                             <div className={styles.resultsCont}>
 
@@ -352,7 +352,7 @@ export function FileContent() {
                                     );
                                 })}
                             </div>
-                        {/* )} */}
+                        )}
                     </div>
                 </div> {/* /upper */}
 

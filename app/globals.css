@@ -39,6 +39,9 @@ main{
   align-items: center;
   gap: 10px;
 }
+.gap20{
+  gap: 20;
+}
 .hideele{
   display: none;
 }

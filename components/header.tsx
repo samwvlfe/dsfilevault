@@ -41,17 +41,19 @@ export function Header() {
     
 
     return (
-        <div className={`${styles.hdr} row`}>
-            <Image
-              className={styles.logo}
-              src={dockstarlogo}
-              alt="dockstar logo"
-              width={1420}
-              height={427}
-              priority
-            />
-            <div className={styles.hdr_txt}>DOCKSTAR FILE VAULT</div>
-            <div className={styles.hdr_txt}>{namestrip ? `Welcome, ${namestrip}!` : "Welcome!"}</div>
+        <div className={`${styles.hdr} row apart`}>
+            <div className="row gap20">
+                <Image
+                className={styles.logo}
+                src={dockstarlogo}
+                alt="dockstar logo"
+                width={1420}
+                height={427}
+                priority
+                />
+                <div className={styles.hdr_txt}>DOCKSTAR FILE VAULT</div>
+            </div>
+            <div className={styles.name_txt}>{namestrip ? `Welcome, ${namestrip}!` : "Welcome!"}</div>
             {/* <div className={styles.logoutbtn}>
                 <a href="/logout">Logout</a>
             </div> */}

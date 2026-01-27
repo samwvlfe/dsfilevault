@@ -16,6 +16,9 @@
         font-weight: 700;
         font-size: 20px;
     }
+    .name_txt{
+        font-size: 18px;
+    }
     .logoutbtn{
         position: absolute;
         top: 10px;
@@ -40,6 +43,10 @@
     }
     .hdr_txt{
         font-size: 13px;
+    }
+    .name_txt{
+        font-size: 11px;
+        align-self: end;
     }
 
 }
