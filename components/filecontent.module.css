@@ -15,7 +15,7 @@
         }
         .resultsCont{
             position: absolute;
-            max-height: 225px;
+            max-height: 50vh;
             overflow: auto;
             border: 1px solid var(--lighttext);
             background-color: #ffffff;
@@ -23,13 +23,15 @@
             gap: 3px;
             display: flex;
             flex-direction: column;
+            width: 200%;
         }
         .resultsCont .result{
             border: none;
             background: none;
+            width: 100%;
             }
             .resultsCont .result:hover{
-                background-color: var(--background);
+                background-color: #be4f301e;
                 cursor: pointer;
             }
             .reswrap{
@@ -261,5 +263,8 @@
     .fileGrid{
         grid-template-columns: repeat(1, 1fr);
         gap: 10px;
+    }
+    .resultsCont{
+        width: 175%;
     }
 }
