@@ -18,6 +18,7 @@
     }
     .name_txt{
         font-size: 18px;
+        align-self: end;
     }
     .logoutbtn{
         position: absolute;
@@ -46,7 +47,6 @@
     }
     .name_txt{
         font-size: 11px;
-        align-self: end;
     }
 
 }

@@ -41,7 +41,7 @@ export function Header() {
     
 
     return (
-        <div className={`${styles.hdr} row apart`}>
+        <div className={`${styles.hdr} row apart center`}>
             <div className="row gap20">
                 <Image
                 className={styles.logo}
