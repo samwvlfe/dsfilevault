@@ -271,4 +271,10 @@
     .resultsCont{
         width: 175%;
     }
+    .resultsCont .result:hover{
+        background-color: inherit;
+    }
+    .resultsCont .result:active{
+        background-color: #be4f301e;
+    }
 }

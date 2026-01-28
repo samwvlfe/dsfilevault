@@ -5,3 +5,9 @@
     padding: var(--padd);
     justify-content: center;
 }
+
+@media (max-width: 700px) {
+    .ftr{
+        font-size: 11px;
+    }
+}

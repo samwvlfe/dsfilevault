@@ -42,7 +42,7 @@ export function Header() {
 
     return (
         <div className={`${styles.hdr} row apart center`}>
-            <div className="row gap20">
+            <div className="row center gap20">
                 <Image
                 className={styles.logo}
                 src={dockstarlogo}
