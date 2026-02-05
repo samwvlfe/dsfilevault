@@ -139,6 +139,8 @@ function mapDriveItem(x) {
     createdBy: identityToSimple(x.createdBy),
     lastModifiedBy: identityToSimple(x.lastModifiedBy),
 
+    thumbnails: x.thumbnails ?? null,
+
     file: x.file
       ? {
           mimeType: x.file.mimeType || null,
@@ -232,6 +234,8 @@ module.exports = async function (context, req) {
       : buildChildrenUrl({ driveId, parentId });
 
     const items = await graphGetAll(url, token);
+    context.log("GRAPH URL:", url);
+    context.log("FIRST ITEM THUMBNAILS:", items?.[0]?.thumbnails);
 
     context.res = {
       status: 200,
