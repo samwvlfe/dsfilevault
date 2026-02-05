@@ -27,6 +27,19 @@ type ApiFolderFacet = {
     childCount?: number | null;
 };
 
+type ApiThumbnailSize = {
+    url: string;
+    width?: number;
+    height?: number;
+};
+
+type ApiThumbnailSet = {
+    id?: string;
+    small?: ApiThumbnailSize;
+    medium?: ApiThumbnailSize;
+    large?: ApiThumbnailSize;
+};
+
 type ApiFile = {
     id: string;
     name: string;
@@ -41,7 +54,7 @@ type ApiFile = {
     createdBy?: ApiIdentity | null;
     lastModifiedBy?: ApiIdentity | null;
 
-    thumbnailURL?: string | null;
+    thumbnails?: ApiThumbnailSet[] | null;
 
     file?: ApiFileFacet | null;
     folder?: ApiFolderFacet | null;
@@ -463,6 +476,12 @@ export function FileContent() {
                             const created = formatDate(item.createdDateTime);
                             const size = formatBytes(item.size);
 
+                            const thumbUrl =
+                                item.thumbnails?.[0]?.large?.url ??
+                                item.thumbnails?.[0]?.medium?.url ??
+                                item.thumbnails?.[0]?.small?.url ??
+                                null;
+
                             return (
                             <div
                                 key={item.id}
@@ -476,10 +495,10 @@ export function FileContent() {
                                 style={{ cursor: "pointer" }}
                                 title={item.name}
                             >
-                                {item.thumbnailURL ? (
+                                {thumbUrl ? (
                                     <Image
                                         className={styles.thumbnail}
-                                        src={item.thumbnailURL}
+                                        src={thumbUrl}
                                         alt={`file thumbnail`}
                                         loading="lazy"
                                         height="150"

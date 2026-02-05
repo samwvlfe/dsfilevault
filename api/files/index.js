@@ -121,12 +121,6 @@ function identityToSimple(identitySet) {
   return identitySet;
 }
 
-function getLargeThumbUrl(x) {
-  const t0 = Array.isArray(x.thumbnails) ? x.thumbnails[0] : null;
-  return t0?.large?.url || t0?.medium?.url || t0?.small?.url || null;
-}
-
-
 function mapDriveItem(x) {
   const isFolder = !!x.folder;
   const isFile = !!x.file;
@@ -145,7 +139,7 @@ function mapDriveItem(x) {
     createdBy: identityToSimple(x.createdBy),
     lastModifiedBy: identityToSimple(x.lastModifiedBy),
 
-    thumbnails: getLargeThumbUrl(x),
+    thumbnails: x.thumbnails ?? null,
 
     file: x.file
       ? {
