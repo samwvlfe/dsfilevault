@@ -166,6 +166,7 @@ function buildChildrenUrl({ driveId, parentId }) {
     "file",
     "folder",
     "parentReference",
+    "thumbnails",
   ].join(",");
 
   const base =
@@ -173,7 +174,7 @@ function buildChildrenUrl({ driveId, parentId }) {
       ? `${graphBase}/drives/${driveId}/items/${parentId}/children`
       : `${graphBase}/drives/${driveId}/root/children`;
 
-  return `${base}?$select=${encodeURIComponent(select)}&$top=200`;
+  return `${base}?$select=${encodeURIComponent(select)}&$expand=thumbnails&$top=200`;
 }
 
 function escapeSearchQuery(s) {
