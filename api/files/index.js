@@ -121,6 +121,12 @@ function identityToSimple(identitySet) {
   return identitySet;
 }
 
+function getLargeThumbUrl(x) {
+  const t0 = Array.isArray(x.thumbnails) ? x.thumbnails[0] : null;
+  return t0?.large?.url || t0?.medium?.url || t0?.small?.url || null;
+}
+
+
 function mapDriveItem(x) {
   const isFolder = !!x.folder;
   const isFile = !!x.file;
@@ -139,7 +145,7 @@ function mapDriveItem(x) {
     createdBy: identityToSimple(x.createdBy),
     lastModifiedBy: identityToSimple(x.lastModifiedBy),
 
-    thumbnails: x.thumbnails ?? null,
+    thumbnails: getLargeThumbUrl(x),
 
     file: x.file
       ? {
@@ -234,8 +240,6 @@ module.exports = async function (context, req) {
       : buildChildrenUrl({ driveId, parentId });
 
     const items = await graphGetAll(url, token);
-    context.log("GRAPH URL:", url);
-    context.log("FIRST ITEM THUMBNAILS:", items?.[0]?.thumbnails);
 
     context.res = {
       status: 200,
