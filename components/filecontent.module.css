@@ -186,17 +186,17 @@
             color: var(--black);
         }
         .foldName{
-            width: 75%;
             font-size: 13px;
             font-weight: bold;
             color: var(--black);
-            align-content: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         .foldMeta{
-            flex: 1;
             font-size: 11px;
             color: var(--lighttext);
-            align-content: end;
+            margin-top: 2px;
         }
         .docMeta{
             font-size: 12px;
@@ -205,7 +205,6 @@
         }
 
     .folderTxt{
-        background-color: rgba(0, 255, 21, 0.1);
         padding: 1px 5px;
         border-radius: 5px;
     }
@@ -216,9 +215,33 @@
     }
 
     .folderBub{
-        background-color: rgba(0, 255, 21, 0.1);
-        padding: 5px;
+        padding: 0;
+        overflow: hidden;
+        align-items: center;
     }
+        .folderLogo{
+            width: 100%;
+            aspect-ratio: 4/3;
+            object-fit: contain;
+            background-color: #ffffff;
+        }
+        .folderLogoFallback{
+            width: 100%;
+            aspect-ratio: 4/3;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9f9f9;
+        }
+        .folderFallbackIcon{
+            width: 60px;
+            height: auto;
+        }
+        .folderInfo{
+            padding: 10px;
+            width: 100%;
+            text-align: center;
+        }
     .fileBub{
         background-color: rgba(0, 166, 255, 0.1);
         padding: 10px;

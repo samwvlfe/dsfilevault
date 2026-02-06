@@ -107,6 +107,7 @@ export function FileContent() {
     const [error, setError] = useState<string | null>(null);
     const [crumbs, setCrumbs] = useState<Crumb[]>([ { id: "root", label: "Home" } ]);
     const atRoot = crumbs.length <= 1;
+    const [folderLogos, setFolderLogos] = useState<Record<string, string>>({});
 
     const [searchText, setSearchText] = useState("");
     const [searchResults, setSearchResults] = useState<SearchResultItem[]>([]);
@@ -200,6 +201,58 @@ export function FileContent() {
             .slice()
             .sort((a, b) => a.name.localeCompare(b.name));
     }, [items]);
+
+    // fetch logo thumbnails for each folder
+    useEffect(() => {
+        if (folders.length === 0) {
+            setFolderLogos({});
+            return;
+        }
+
+        const controller = new AbortController();
+
+        async function fetchLogos() {
+            const logoMap: Record<string, string> = {};
+
+            await Promise.all(
+                folders.map(async (folder) => {
+                    try {
+                        const res = await fetch(
+                            `/api/files?parentId=${encodeURIComponent(folder.id)}`,
+                            { signal: controller.signal }
+                        );
+                        if (!res.ok) return;
+                        const data: ApiResponse = await res.json();
+
+                        const logoFile = data.items.find((item) =>
+                            /^logo\.(png|jpg|jpeg)$/i.test(item.name)
+                        );
+
+                        if (logoFile) {
+                            const thumbUrl =
+                                logoFile.thumbnails?.[0]?.large?.url ??
+                                logoFile.thumbnails?.[0]?.medium?.url ??
+                                logoFile.thumbnails?.[0]?.small?.url ??
+                                null;
+                            if (thumbUrl) {
+                                logoMap[folder.id] = thumbUrl;
+                            }
+                        }
+                    } catch {
+                        // ignore individual failures
+                    }
+                })
+            );
+
+            if (!controller.signal.aborted) {
+                setFolderLogos(logoMap);
+            }
+        }
+
+        fetchLogos();
+
+        return () => controller.abort();
+    }, [folders]);
 
     // sort - get all files
     const files = useMemo(() => {
@@ -420,7 +473,7 @@ export function FileContent() {
                             return (
                                 <div
                                     key={item.id}
-                                    className={`${styles.docBubble} row ${styles.folderBub}`}
+                                    className={`${styles.docBubble} stack ${styles.folderBub}`}
                                     onClick={() => onItemClick(item)}
                                     role="button"
                                     tabIndex={0}
@@ -430,15 +483,26 @@ export function FileContent() {
                                     style={{ cursor: "pointer" }}
                                     title="Open folder"
                                 >
-                                    <Image
-                                        className={styles.docIcon}
-                                        src={foldericon}
-                                        alt="folder icon"
-                                        width={536}
-                                        height={388}
-                                    />
+                                    {folderLogos[item.id] ? (
+                                        <img
+                                            className={styles.folderLogo}
+                                            src={folderLogos[item.id]}
+                                            alt={`${item.name} logo`}
+                                            loading="lazy"
+                                        />
+                                    ) : (
+                                        <div className={styles.folderLogoFallback}>
+                                            <Image
+                                                src={foldericon}
+                                                alt="folder icon"
+                                                width={536}
+                                                height={388}
+                                                className={styles.folderFallbackIcon}
+                                            />
+                                        </div>
+                                    )}
 
-                                    <div className={`${styles.docInfo} row`}>
+                                    <div className={styles.folderInfo}>
                                         <div className={styles.foldName}>{item.name}</div>
                                         <div className={styles.foldMeta}>{sizeOrCount}</div>
                                     </div>
