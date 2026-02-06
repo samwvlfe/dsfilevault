@@ -229,7 +229,7 @@ export function FileContent() {
                         const data: ApiResponse = await res.json();
 
                         const logoFile = data.items.find((item) =>
-                            /^logo\.(png|jpe?g|avif|webp|svg)$/i.test(item.name)
+                            /logo\.(png|jpe?g|avif|webp|svg)$/i.test(item.name)
                         );
 
                         if (!logoFile) {
