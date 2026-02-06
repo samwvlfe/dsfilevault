@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import foldericon from "@/app/images/fileicons/folder.png";
 import imageicon from "@/app/images/fileicons/image.png";
@@ -108,6 +108,7 @@ export function FileContent() {
     const [crumbs, setCrumbs] = useState<Crumb[]>([ { id: "root", label: "Home" } ]);
     const atRoot = crumbs.length <= 1;
     const [folderLogos, setFolderLogos] = useState<Record<string, string>>({});
+    const logoCache = useRef<Record<string, string>>({});
 
     const [searchText, setSearchText] = useState("");
     const [searchResults, setSearchResults] = useState<SearchResultItem[]>([]);
@@ -202,7 +203,7 @@ export function FileContent() {
             .sort((a, b) => a.name.localeCompare(b.name));
     }, [items]);
 
-    // fetch logo thumbnails for each folder
+    // fetch logo thumbnails for each folder (cached + progressive)
     useEffect(() => {
         const folderItems = items.filter((x) => x.type === "folder");
         if (folderItems.length === 0) {
@@ -210,62 +211,57 @@ export function FileContent() {
             return;
         }
 
-        const controller = new AbortController();
-
-        async function fetchLogos() {
-            const logoMap: Record<string, string> = {};
-
-            await Promise.all(
-                folderItems.map(async (folder) => {
-                    try {
-                        const res = await fetch(
-                            `/api/files?parentId=${encodeURIComponent(folder.id)}`,
-                            { signal: controller.signal }
-                        );
-                        if (!res.ok) {
-                            console.warn(`[logo] fetch failed for "${folder.name}":`, res.status);
-                            return;
-                        }
-                        const data: ApiResponse = await res.json();
-
-                        const logoFile = data.items.find((item) =>
-                            /logo\.(png|jpe?g|avif|webp|svg)$/i.test(item.name)
-                        );
-
-                        if (!logoFile) {
-                            const fileNames = data.items.map((i) => i.name);
-                            console.log(`[logo] no logo file in "${folder.name}", files:`, fileNames);
-                            return;
-                        }
-
-                        console.log(`[logo] found "${logoFile.name}" in "${folder.name}", thumbnails:`, logoFile.thumbnails);
-
-                        const thumbUrl =
-                            logoFile.thumbnails?.[0]?.large?.url ??
-                            logoFile.thumbnails?.[0]?.medium?.url ??
-                            logoFile.thumbnails?.[0]?.small?.url ??
-                            null;
-
-                        if (thumbUrl) {
-                            logoMap[folder.id] = thumbUrl;
-                        } else {
-                            console.warn(`[logo] "${logoFile.name}" in "${folder.name}" has no thumbnail URLs`);
-                        }
-                    } catch (e: any) {
-                        if (e?.name !== "AbortError") {
-                            console.error(`[logo] error for "${folder.name}":`, e);
-                        }
-                    }
-                })
-            );
-
-            if (!controller.signal.aborted) {
-                console.log(`[logo] resolved logos for ${Object.keys(logoMap).length}/${folderItems.length} folders`, logoMap);
-                setFolderLogos(logoMap);
+        // apply cached logos instantly
+        const cached: Record<string, string> = {};
+        const uncached: ApiFile[] = [];
+        for (const folder of folderItems) {
+            if (logoCache.current[folder.id]) {
+                cached[folder.id] = logoCache.current[folder.id];
+            } else {
+                uncached.push(folder);
             }
         }
 
-        fetchLogos();
+        if (Object.keys(cached).length > 0) {
+            setFolderLogos(cached);
+        }
+
+        // nothing left to fetch
+        if (uncached.length === 0) return;
+
+        const controller = new AbortController();
+
+        // fire all fetches in parallel, update state as each resolves
+        for (const folder of uncached) {
+            (async () => {
+                try {
+                    const res = await fetch(
+                        `/api/files?parentId=${encodeURIComponent(folder.id)}`,
+                        { signal: controller.signal }
+                    );
+                    if (!res.ok) return;
+                    const data: ApiResponse = await res.json();
+
+                    const logoFile = data.items.find((item) =>
+                        /logo\.(png|jpe?g|avif|webp|svg)$/i.test(item.name)
+                    );
+                    if (!logoFile) return;
+
+                    const thumbUrl =
+                        logoFile.thumbnails?.[0]?.large?.url ??
+                        logoFile.thumbnails?.[0]?.medium?.url ??
+                        logoFile.thumbnails?.[0]?.small?.url ??
+                        null;
+
+                    if (thumbUrl && !controller.signal.aborted) {
+                        logoCache.current[folder.id] = thumbUrl;
+                        setFolderLogos((prev) => ({ ...prev, [folder.id]: thumbUrl }));
+                    }
+                } catch {
+                    // ignore aborts and individual failures
+                }
+            })();
+        }
 
         return () => controller.abort();
     }, [items]);
