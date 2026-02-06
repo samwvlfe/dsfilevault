@@ -233,7 +233,8 @@ export function FileContent() {
                         );
 
                         if (!logoFile) {
-                            console.log(`[logo] no logo file found in "${folder.name}"`);
+                            const fileNames = data.items.map((i) => i.name);
+                            console.log(`[logo] no logo file in "${folder.name}", files:`, fileNames);
                             return;
                         }
 
