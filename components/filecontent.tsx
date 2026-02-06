@@ -204,7 +204,8 @@ export function FileContent() {
 
     // fetch logo thumbnails for each folder
     useEffect(() => {
-        if (folders.length === 0) {
+        const folderItems = items.filter((x) => x.type === "folder");
+        if (folderItems.length === 0) {
             setFolderLogos({});
             return;
         }
@@ -215,36 +216,50 @@ export function FileContent() {
             const logoMap: Record<string, string> = {};
 
             await Promise.all(
-                folders.map(async (folder) => {
+                folderItems.map(async (folder) => {
                     try {
                         const res = await fetch(
                             `/api/files?parentId=${encodeURIComponent(folder.id)}`,
                             { signal: controller.signal }
                         );
-                        if (!res.ok) return;
+                        if (!res.ok) {
+                            console.warn(`[logo] fetch failed for "${folder.name}":`, res.status);
+                            return;
+                        }
                         const data: ApiResponse = await res.json();
 
                         const logoFile = data.items.find((item) =>
-                            /^logo\.(png|jpg|jpeg)$/i.test(item.name)
+                            /^logo\.(png|jpe?g|avif|webp|svg)$/i.test(item.name)
                         );
 
-                        if (logoFile) {
-                            const thumbUrl =
-                                logoFile.thumbnails?.[0]?.large?.url ??
-                                logoFile.thumbnails?.[0]?.medium?.url ??
-                                logoFile.thumbnails?.[0]?.small?.url ??
-                                null;
-                            if (thumbUrl) {
-                                logoMap[folder.id] = thumbUrl;
-                            }
+                        if (!logoFile) {
+                            console.log(`[logo] no logo file found in "${folder.name}"`);
+                            return;
                         }
-                    } catch {
-                        // ignore individual failures
+
+                        console.log(`[logo] found "${logoFile.name}" in "${folder.name}", thumbnails:`, logoFile.thumbnails);
+
+                        const thumbUrl =
+                            logoFile.thumbnails?.[0]?.large?.url ??
+                            logoFile.thumbnails?.[0]?.medium?.url ??
+                            logoFile.thumbnails?.[0]?.small?.url ??
+                            null;
+
+                        if (thumbUrl) {
+                            logoMap[folder.id] = thumbUrl;
+                        } else {
+                            console.warn(`[logo] "${logoFile.name}" in "${folder.name}" has no thumbnail URLs`);
+                        }
+                    } catch (e: any) {
+                        if (e?.name !== "AbortError") {
+                            console.error(`[logo] error for "${folder.name}":`, e);
+                        }
                     }
                 })
             );
 
             if (!controller.signal.aborted) {
+                console.log(`[logo] resolved logos for ${Object.keys(logoMap).length}/${folderItems.length} folders`, logoMap);
                 setFolderLogos(logoMap);
             }
         }
@@ -252,7 +267,7 @@ export function FileContent() {
         fetchLogos();
 
         return () => controller.abort();
-    }, [folders]);
+    }, [items]);
 
     // sort - get all files
     const files = useMemo(() => {
