@@ -499,7 +499,7 @@ export function FileContent() {
                             return (
                             <div
                                 key={item.id}
-                                className={`${styles.docBubble} stack ${styles.fileBub}`}
+                                className={`${styles.docBubble} ${styles.fileBub}`}
                                 onClick={() => onItemClick(item)}
                                 role="button"
                                 tabIndex={0}
@@ -510,29 +510,26 @@ export function FileContent() {
                                 title={item.name}
                             >
                                 {thumbUrl ? (
-                                    <Image
+                                    <img
                                         className={styles.thumbnail}
                                         src={thumbUrl}
-                                        alt={`file thumbnail`}
+                                        alt="file thumbnail"
                                         loading="lazy"
-                                        height="150"
-                                        width="120"
                                     />
                                 ) : (
                                     <Image
                                         className={styles.docIcon}
                                         src={icon}
                                         alt="file icon"
-                                        width={1201}
-                                        height={872}
+                                        width={36}
+                                        height={36}
                                     />
                                 )}
 
-                                <div className={`stack`}>
+                                <div className={styles.fileBubText}>
                                     <div className={styles.docName}>{item.name}</div>
-                                    <div className={`${styles.docMeta} stack`}>
-                                        <div>{size}</div>
-                                        <div>{created}</div>
+                                    <div className={styles.docMeta}>
+                                        {size} &middot; {created}
                                     </div>
                                 </div>
                             </div>

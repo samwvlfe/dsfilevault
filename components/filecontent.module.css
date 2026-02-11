@@ -170,8 +170,9 @@
         }
 
         .docIcon{
-            width: 50px;
+            width: 36px;
             height: auto;
+            flex-shrink: 0;
         }
         .docInfo{
             margin: 0 0 0 10px;
@@ -181,13 +182,16 @@
             text-overflow: ellipsis;
         }
         .docName{
-            font-size: 14px;
-            font-weight: bold;
+            font-size: 13px;
+            font-weight: 600;
             color: var(--black);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
         .foldName{
-            font-size: 13px;
-            font-weight: bold;
+            font-size: 12px;
+            font-weight: 600;
             color: var(--black);
             overflow: hidden;
             text-overflow: ellipsis;
@@ -199,9 +203,9 @@
             margin-top: 2px;
         }
         .docMeta{
-            font-size: 12px;
+            font-size: 11px;
             color: var(--lighttext);
-            gap: 10px;
+            gap: 2px;
         }
 
     .folderTxt{
@@ -221,42 +225,56 @@
     }
         .folderLogo{
             width: 100%;
-            aspect-ratio: 4/3;
+            aspect-ratio: 3/2;
             object-fit: contain;
             background-color: #ffffff;
         }
         .folderLogoFallback{
             width: 100%;
-            aspect-ratio: 4/3;
+            aspect-ratio: 3/2;
             display: flex;
             align-items: center;
             justify-content: center;
             background-color: #f9f9f9;
         }
         .folderFallbackIcon{
-            width: 60px;
+            width: 48px;
             height: auto;
         }
         .folderInfo{
-            padding: 10px;
+            padding: 8px;
             width: 100%;
             text-align: center;
         }
     .fileBub{
-        background-color: rgba(0, 166, 255, 0.1);
+        background-color: rgba(0, 166, 255, 0.05);
         padding: 10px;
+        flex-direction: row;
+        align-items: center;
+        gap: 10px;
     }
+        .fileBubText{
+            min-width: 0;
+            flex: 1;
+        }
+        .thumbnail{
+            width: 40px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
 
-    
+
     .folderGrid{
         display: grid;
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(5, 1fr);
         gap: 10px;
     }
     .fileGrid{
         display: grid;
-        grid-template-columns: repeat(10, 1fr);
-        gap: 10px;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 8px;
     }
 
 /* Tablet */
@@ -269,6 +287,9 @@
     }
     .folderGrid{
         grid-template-columns: repeat(3, 1fr);
+    }
+    .fileGrid{
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     }
 }
 
@@ -290,7 +311,7 @@
     }
     .fileGrid{
         grid-template-columns: repeat(1, 1fr);
-        gap: 10px;
+        gap: 8px;
     }
     .resultsCont{
         width: 175%;
