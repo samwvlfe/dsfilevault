@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import foldericon from "@/app/images/fileicons/folder.png";
 import imageicon from "@/app/images/fileicons/image.png";
@@ -11,6 +11,7 @@ import pptxicon from "@/app/images/fileicons/pptx.png";
 import xlsxicon from "@/app/images/fileicons/xlsx.png";
 import defaultfile from "@/app/images/fileicons/defaultfile.png";
 import styles from "./filecontent.module.css";
+import { useFolderLogos } from "@/lib/logoCache";
 
 type ApiIdentity = {
     type: "user" | "application" | string;
@@ -107,8 +108,7 @@ export function FileContent() {
     const [error, setError] = useState<string | null>(null);
     const [crumbs, setCrumbs] = useState<Crumb[]>([ { id: "root", label: "Home" } ]);
     const atRoot = crumbs.length <= 1;
-    const [folderLogos, setFolderLogos] = useState<Record<string, string>>({});
-    const logoCache = useRef<Record<string, string>>({});
+    const folderLogos = useFolderLogos(items);
 
     const [searchText, setSearchText] = useState("");
     const [searchResults, setSearchResults] = useState<SearchResultItem[]>([]);
@@ -203,68 +203,6 @@ export function FileContent() {
             .sort((a, b) => a.name.localeCompare(b.name));
     }, [items]);
 
-    // fetch logo thumbnails for each folder (cached + progressive)
-    useEffect(() => {
-        const folderItems = items.filter((x) => x.type === "folder");
-        if (folderItems.length === 0) {
-            setFolderLogos({});
-            return;
-        }
-
-        // apply cached logos instantly
-        const cached: Record<string, string> = {};
-        const uncached: ApiFile[] = [];
-        for (const folder of folderItems) {
-            if (logoCache.current[folder.id]) {
-                cached[folder.id] = logoCache.current[folder.id];
-            } else {
-                uncached.push(folder);
-            }
-        }
-
-        if (Object.keys(cached).length > 0) {
-            setFolderLogos(cached);
-        }
-
-        // nothing left to fetch
-        if (uncached.length === 0) return;
-
-        const controller = new AbortController();
-
-        // fire all fetches in parallel, update state as each resolves
-        for (const folder of uncached) {
-            (async () => {
-                try {
-                    const res = await fetch(
-                        `/api/files?parentId=${encodeURIComponent(folder.id)}`,
-                        { signal: controller.signal }
-                    );
-                    if (!res.ok) return;
-                    const data: ApiResponse = await res.json();
-
-                    const logoFile = data.items.find((item) =>
-                        /logo\.(png|jpe?g|avif|webp|svg)$/i.test(item.name)
-                    );
-                    if (!logoFile) return;
-
-                    const thumbUrl =
-                        logoFile.thumbnails?.[0]?.large?.url ??
-                        logoFile.thumbnails?.[0]?.medium?.url ??
-                        logoFile.thumbnails?.[0]?.small?.url ??
-                        null;
-
-                    if (thumbUrl && !controller.signal.aborted) {
-                        logoCache.current[folder.id] = thumbUrl;
-                        setFolderLogos((prev) => ({ ...prev, [folder.id]: thumbUrl }));
-                    }
-                } catch {
-                    // ignore aborts and individual failures
-                }
-            })();
-        }
-
-        return () => controller.abort();
-    }, [items]);
 
     // sort - get all files
     const files = useMemo(() => {
