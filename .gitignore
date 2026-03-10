@@ -42,3 +42,7 @@ next-env.d.ts
 
 #hide sensitive notes
 .notes
+
+# folder data
+.DS_Store
+**/.DS_Store

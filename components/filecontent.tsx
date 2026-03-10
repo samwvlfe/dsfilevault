@@ -12,6 +12,7 @@ import xlsxicon from "@/app/images/fileicons/xlsx.png";
 import defaultfile from "@/app/images/fileicons/defaultfile.png";
 import styles from "./filecontent.module.css";
 import { useFolderLogos } from "@/lib/logoCache";
+import folderDescriptions from "@/lib/folderDescriptions.json";
 
 type ApiIdentity = {
     type: "user" | "application" | string;
@@ -418,6 +419,7 @@ export function FileContent() {
                 <div className={styles.folderGrid}>
                     {folders.length > 0 ? (
                         folders.map((item) => {
+                            console.log("Folder name:", item.name);
                             const sizeOrCount = `${item.folder?.childCount ?? 0} items`;
 
                             return (
@@ -455,6 +457,11 @@ export function FileContent() {
                                     <div className={styles.folderInfo}>
                                         <div className={styles.foldName}>{item.name}</div>
                                         <div className={styles.foldMeta}>{sizeOrCount}</div>
+                                        {folderDescriptions[item.name as keyof typeof folderDescriptions] && (
+                                            <div className={styles.foldDescription}>
+                                                {folderDescriptions[item.name as keyof typeof folderDescriptions]}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                             );
@@ -466,22 +473,6 @@ export function FileContent() {
                 
                 {/* FILES CONTAINER */}
                 <div className={styles.fileGrid}>
-                    {/* <div className={`${styles.docBubble} stack ${styles.fileBub}`}>
-                        <img
-                            className={styles.thumbnail}
-                            src="https://westus21-mediap.svc.ms/transform/thumbnail?provider=spo&inputFormat=pdf&cs=NWQzMTlmNWMtM2I0Zi00ODYxLTk4ZmMtMTdhOWE4ZDA3MTM1fFNQTw&docid=https%3A%2F%2Ftwentyonetwelve.sharepoint.com%2F_api%2Fv2.0%2Fdrives%2Fb!RP8adkkaRE2-OSf6pR3v63LJMFA2F1NBiyQV-4s3QhqpRiespI37Tq6OKMMVxU4B%2Fitems%2F01QI45QAQQV53WDSYUHNHINAXDM4ON2WVW%3Ftempauth%3Dv1.eyJzaXRlaWQiOiI3NjFhZmY0NC0xYTQ5LTRkNDQtYmUzOS0yN2ZhYTUxZGVmZWIiLCJhcHBfZGlzcGxheW5hbWUiOiJmaWxldmF1bHQiLCJuYW1laWQiOiI1ZDMxOWY1Yy0zYjRmLTQ4NjEtOThmYy0xN2E5YThkMDcxMzVANzQ5OTZkNWUtNGVmYi00NDUxLTg4MmQtZmIyMWM4ZTI1OTJkIiwiYXVkIjoiMDAwMDAwMDMtMDAwMC0wZmYxLWNlMDAtMDAwMDAwMDAwMDAwL3R3ZW50eW9uZXR3ZWx2ZS5zaGFyZXBvaW50LmNvbUA3NDk5NmQ1ZS00ZWZiLTQ0NTEtODgyZC1mYjIxYzhlMjU5MmQiLCJleHAiOiIxNzcwMzI1MjAwIn0.CkAKDGVudHJhX2NsYWltcxIwQ0xmaWtzd0dFQUFhRm01VlNuZEhNMU0zVjBWVGNETnNWek4yUkUxRVFVRXFBQT09CjIKCmFjdG9yYXBwaWQSJDAwMDAwMDAzLTAwMDAtMDAwMC1jMDAwLTAwMDAwMDAwMDAwMAoKCgRzbmlkEgI4NBIGCM6DPBABGg00MC4xMjYuMjcuMTUyKixKRHpWdU9lWTN4eXdLQ3MvaFJkZjJWWi9za01nTGhodnk4SFpEUVo0aUx3PTCjATgBShBoYXNoZWRwcm9vZnRva2VuegExugENYWxsc2l0ZXMucmVhZA.wHVTxJJiGSuotGn0f_gVrEDGWr9-yA13btezV9zOaOI%26version%3DPublished&width=800&height=800&cb=63903914724"
-                            alt="file thumbnail"
-                            width="120"
-                            height="150"
-                        />
-
-                        <div className={`stack`}>
-                            <div className={styles.docName}>FILE NAME HERE</div>
-                            <div className={`${styles.docMeta} row`}>
-                                <div>SIZE</div>
-                            </div>
-                        </div>
-                    </div> */}
 
                     {files.length > 0 ? (
                         files.map((item) => {
