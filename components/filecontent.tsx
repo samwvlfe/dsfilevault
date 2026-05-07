@@ -11,7 +11,7 @@ import pptxicon from "@/app/images/fileicons/pptx.png";
 import xlsxicon from "@/app/images/fileicons/xlsx.png";
 import defaultfile from "@/app/images/fileicons/defaultfile.png";
 import styles from "./filecontent.module.css";
-import { useFolderLogos } from "@/lib/logoCache";
+import { useFolderLogos, LOGO_PATTERN } from "@/lib/logoCache";
 import folderDescriptions from "@/lib/folderDescriptions.json";
 
 type ApiIdentity = {
@@ -212,7 +212,7 @@ export function FileContent() {
     const files = useMemo(() => {
         const PINNED = "Using File Vault Assets";
         return items
-            .filter((x) => x.type === "file")
+            .filter((x) => x.type === "file" && !LOGO_PATTERN.test(x.name))
             .slice()
             .sort((a, b) => {
                 const aPin = a.name.startsWith(PINNED);

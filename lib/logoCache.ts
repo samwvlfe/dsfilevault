@@ -32,7 +32,7 @@ type FolderLike = {
 };
 
 const STORAGE_KEY = "dsfilevault_logo_cache";
-const LOGO_PATTERN = /logo\.(png|jpe?g|avif|webp|svg)$/i;
+export const LOGO_PATTERN = /logo\.(png|jpe?g|avif|webp|svg)$/i;
 
 // ── Module-level in-memory cache (survives component remounts) ──
 const memoryCache: Record<string, string> = {};
