@@ -207,10 +207,17 @@ export function FileContent() {
 
     // sort - get all files
     const files = useMemo(() => {
+        const PINNED = "Using File Vault Assets";
         return items
             .filter((x) => x.type === "file")
             .slice()
-            .sort((a, b) => a.name.localeCompare(b.name));
+            .sort((a, b) => {
+                const aPin = a.name.startsWith(PINNED);
+                const bPin = b.name.startsWith(PINNED);
+                if (aPin && !bPin) return -1;
+                if (!aPin && bPin) return 1;
+                return a.name.localeCompare(b.name);
+            });
     }, [items]);
 
 
@@ -419,7 +426,6 @@ export function FileContent() {
                 <div className={styles.folderGrid}>
                     {folders.length > 0 ? (
                         folders.map((item) => {
-                            console.log("Folder name:", item.name);
                             const sizeOrCount = `${item.folder?.childCount ?? 0} items`;
 
                             return (
