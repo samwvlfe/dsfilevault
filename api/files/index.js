@@ -129,6 +129,7 @@ function mapDriveItem(x) {
     id: x.id,
     name: x.name,
     webUrl: x.webUrl,
+    downloadUrl: x["@microsoft.graph.downloadUrl"] ?? null,
     size: x.size ?? null,
 
     type: isFolder ? "folder" : isFile ? "file" : "item",

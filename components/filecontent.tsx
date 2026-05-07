@@ -46,6 +46,7 @@ type ApiFile = {
     id: string;
     name: string;
     webUrl?: string | null;
+    downloadUrl?: string | null;
     size?: number | null;
 
     type: "folder" | "file" | "item";
@@ -78,6 +79,7 @@ type SearchResultItem = {
     name: string;
     type: "folder" | "file";
     webUrl?: string | null;
+    downloadUrl?: string | null;
 };
 
 // ####### helper funcs for formatting data #######
@@ -235,9 +237,10 @@ export function FileContent() {
             openFolder(item);
             return;
         }
-        // file, open in new tab
-        if (item.webUrl) {
-            window.open(item.webUrl, "_blank", "noopener,noreferrer");
+        // file, download via Graph download URL (falls back to webUrl)
+        const fileUrl = item.downloadUrl || item.webUrl;
+        if (fileUrl) {
+            window.open(fileUrl, "_blank", "noopener,noreferrer");
         }
     }
 
@@ -303,7 +306,8 @@ export function FileContent() {
         setSearchOpen(false);
 
         if (item.type === "file") {
-            if (item.webUrl) window.open(item.webUrl, "_blank", "noopener,noreferrer");
+            const fileUrl = item.downloadUrl || item.webUrl;
+            if (fileUrl) window.open(fileUrl, "_blank", "noopener,noreferrer");
             return;
         }
 
@@ -503,7 +507,7 @@ export function FileContent() {
                                 onKeyDown={(e) => {
                                 if (e.key === "Enter" || e.key === " ") onItemClick(item);
                                 }}
-                                style={{ cursor: "pointer" }}
+                                style={{ cursor: "pointer", ...(item.name.startsWith("Using File Vault Assets") && { border: "2px dashed var(--orange)" }) }}
                                 title={item.name}
                             >
                                 {thumbUrl ? (
