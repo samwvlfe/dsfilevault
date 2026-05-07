@@ -112,6 +112,7 @@ export function FileContent() {
     const [crumbs, setCrumbs] = useState<Crumb[]>([ { id: "root", label: "Home" } ]);
     const atRoot = crumbs.length <= 1;
     const folderLogos = useFolderLogos(items);
+    const [brokenLogos, setBrokenLogos] = useState<Set<string>>(new Set());
 
     const [searchText, setSearchText] = useState("");
     const [searchResults, setSearchResults] = useState<SearchResultItem[]>([]);
@@ -445,12 +446,13 @@ export function FileContent() {
                                     style={{ cursor: "pointer" }}
                                     title="Open folder"
                                 >
-                                    {folderLogos[item.id] ? (
+                                    {folderLogos[item.id] && !brokenLogos.has(item.id) ? (
                                         <img
                                             className={styles.folderLogo}
                                             src={folderLogos[item.id]}
                                             alt={`${item.name} logo`}
                                             loading="lazy"
+                                            onError={() => setBrokenLogos((prev) => new Set(prev).add(item.id))}
                                         />
                                     ) : (
                                         <div className={styles.folderLogoFallback}>
@@ -492,7 +494,6 @@ export function FileContent() {
                             const size = formatBytes(item.size);
 
                             const thumbUrl =
-                                item.thumbnails?.[0]?.large?.url ??
                                 item.thumbnails?.[0]?.medium?.url ??
                                 item.thumbnails?.[0]?.small?.url ??
                                 null;
@@ -507,7 +508,7 @@ export function FileContent() {
                                 onKeyDown={(e) => {
                                 if (e.key === "Enter" || e.key === " ") onItemClick(item);
                                 }}
-                                style={{ cursor: "pointer", ...(item.name.startsWith("Using File Vault Assets") && { border: "2px dashed var(--orange)" }) }}
+                                style={{ cursor: "pointer" }}
                                 title={item.name}
                             >
                                 {thumbUrl ? (
@@ -516,6 +517,11 @@ export function FileContent() {
                                         src={thumbUrl}
                                         alt="file thumbnail"
                                         loading="lazy"
+                                        onError={(e) => {
+                                            e.currentTarget.onerror = null;
+                                            e.currentTarget.src = icon.src;
+                                            e.currentTarget.className = styles.docIcon;
+                                        }}
                                     />
                                 ) : (
                                     <Image
